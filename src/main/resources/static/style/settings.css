@@ -1,0 +1,22 @@
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#menu{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 30%;
+    padding: 2rem;
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    color: #fff;
+    text-align: center;
+}

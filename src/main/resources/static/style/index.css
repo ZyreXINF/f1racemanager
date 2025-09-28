@@ -1,0 +1,92 @@
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+li{
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+p{
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.2rem;
+    font-weight:600;
+    text-align: center;
+    color:#1f1e1e;
+    margin-top: 2.5rem;
+}
+li form {
+    width: 100%;              /* make form fill the li */
+    display: flex;            /* flex so button can be centered */
+    justify-content: center;  /* center button horizontally */
+}
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title{
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+    font-size: 5rem;
+}
+
+.highlight{
+    color:#c43939;
+}
+
+#menu{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 30%;
+    padding: 2rem;
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    color: #fff;
+    text-align: center;
+}
+/* Buttons */
+button{
+    transition-duration: 0.5s;
+
+    width: 60%;
+
+    font-family: "Open Sans", sans-serif;
+    font-size: 3rem;
+    font-weight: 650;
+    text-align: center;
+    cursor: pointer;
+
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    border-radius: 2rem;
+    border: 2px solid;
+}
+
+#start-button{
+    border-color:#c43939;
+}
+#start-button:hover{
+    background-color:#c43939;
+    color:white;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px #c43939;
+}
+button:hover{
+    background-color:#1f1e1e;
+    border-color: black;
+    color:white;
+    transform: scale(1.1);
+}
