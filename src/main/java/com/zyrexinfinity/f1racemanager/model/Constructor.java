@@ -14,4 +14,32 @@ public class Constructor {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bolidId")
     private Bolid bolid;
+
+    public long getTeamId() {
+        return teamId;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public short getCrewRating() {
+        return crewRating;
+    }
+
+    public void setCrewRating(short crewRating) {
+        this.crewRating = crewRating;
+    }
+
+    public Bolid getBolid() {
+        return bolid;
+    }
+
+    public void setBolid(Bolid bolid) {
+        this.bolid = bolid;
+    }
 }
