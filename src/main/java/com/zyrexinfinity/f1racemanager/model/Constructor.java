@@ -1,5 +1,6 @@
 package com.zyrexinfinity.f1racemanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +14,18 @@ public class Constructor {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bolidId")
+    @JsonIgnore
     private Bolid bolid;
+
+    @Override
+    public String toString() {
+        return "Constructor{" +
+                "teamId=" + teamId +
+                ", teamName='" + teamName + '\'' +
+                ", crewRating=" + crewRating +
+                ", bolid=" + bolid.getBolidId() +
+                '}';
+    }
 
     public long getTeamId() {
         return teamId;

@@ -1,5 +1,6 @@
 package com.zyrexinfinity.f1racemanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +11,10 @@ public class Driver {
 
     private String fullName;
     private String nationality;
+
     @ManyToOne
     @JoinColumn(name = "teamId")
+    @JsonIgnore
     private Constructor team;
 
     private short driverRating;
@@ -20,6 +23,20 @@ public class Driver {
     private short driverAwareness;
     private short driverPace;
 
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "driverId=" + driverId +
+                ", fullName='" + fullName + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", driverRating=" + driverRating +
+                ", driverExperience=" + driverExperience +
+                ", driverRacecraft=" + driverRacecraft +
+                ", driverAwareness=" + driverAwareness +
+                ", driverPace=" + driverPace +
+                ", team=" + team.getTeamId() +
+                '}';
+    }
 
     public long getDriverId() {
         return driverId;

@@ -23,6 +23,17 @@ public class Bolid {
         this.reliability = reliability;
     }
 
+    @Override
+    public String toString() {
+        return "Bolid{" +
+                "bolidId=" + bolidId +
+                ", bolidModel='" + bolidModel + '\'' +
+                ", bolidPace=" + bolidPace +
+                ", aerodynamicRating=" + aerodynamicRating +
+                ", reliability=" + reliability +
+                '}';
+    }
+
     public long getBolidId() {
         return bolidId;
     }
