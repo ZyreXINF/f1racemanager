@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
-public class Constructor {
+@Table(name="constructor")
+public class ConstructorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long teamId;
@@ -15,7 +16,7 @@ public class Constructor {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bolidId")
     @JsonIgnore
-    private Bolid bolid;
+    private BolidEntity bolid;
 
     @Override
     public String toString() {
@@ -47,11 +48,11 @@ public class Constructor {
         this.crewRating = crewRating;
     }
 
-    public Bolid getBolid() {
+    public BolidEntity getBolid() {
         return bolid;
     }
 
-    public void setBolid(Bolid bolid) {
+    public void setBolid(BolidEntity bolid) {
         this.bolid = bolid;
     }
 }

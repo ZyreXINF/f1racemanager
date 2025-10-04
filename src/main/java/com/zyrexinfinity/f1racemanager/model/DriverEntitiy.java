@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
-public class Driver {
+@Table(name="driver")
+public class DriverEntitiy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long driverId;
@@ -15,7 +16,7 @@ public class Driver {
     @ManyToOne
     @JoinColumn(name = "teamId")
     @JsonIgnore
-    private Constructor team;
+    private ConstructorEntity team;
 
     private short driverRating;
     private short driverExperience;
@@ -58,11 +59,11 @@ public class Driver {
         this.nationality = nationality;
     }
 
-    public Constructor getTeam() {
+    public ConstructorEntity getTeam() {
         return team;
     }
 
-    public void setTeam(Constructor team) {
+    public void setTeam(ConstructorEntity team) {
         this.team = team;
     }
 

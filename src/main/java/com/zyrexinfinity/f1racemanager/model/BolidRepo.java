@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BolidRepo extends JpaRepository<Bolid,Long> {
-    List<Bolid> findByBolidIdBetween(long startId, long endId);
+public interface BolidRepo extends JpaRepository<BolidEntity,Long> {
+    List<BolidEntity> findByBolidIdBetween(long startId, long endId);
 
 }

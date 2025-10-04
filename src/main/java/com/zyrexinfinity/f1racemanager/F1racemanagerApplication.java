@@ -7,5 +7,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class F1racemanagerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(F1racemanagerApplication.class, args);
-	}
+    }
 }

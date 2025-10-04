@@ -17,6 +17,7 @@ public class RaceSettingsService {
     @Autowired
     BolidRepo bolidRepo;
 
+    //For custom grids
     private boolean driverSettingsDefault = true;
     private boolean constructorSettingsDefault = true;
     private boolean bolidSettingsDefault = true;
@@ -34,21 +35,21 @@ public class RaceSettingsService {
         return false;
     }
 
-    public List<Driver> getDriverSettings(){
+    public List<DriverEntitiy> getDriverList(){
         if(driverSettingsDefault){
             return driverRepo.findByDriverIdBetween(1,20);
         }else{
             return null;
         }
     }
-    public List<Constructor> getConstructorSettings(){
+    public List<ConstructorEntity> getConstructorList(){
         if(constructorSettingsDefault){
             return constructorRepo.findByTeamIdBetween(1,10);
         }else{
             return null;
         }
     }
-    public List<Bolid> getBolidSettings(){
+    public List<BolidEntity> getBolidList(){
         if(bolidSettingsDefault){
             return bolidRepo.findByBolidIdBetween(1,10);
         }else{

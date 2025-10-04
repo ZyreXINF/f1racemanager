@@ -3,7 +3,8 @@ package com.zyrexinfinity.f1racemanager.model;
 import jakarta.persistence.*;
 
 @Entity
-public class Bolid {
+@Table(name="bolid")
+public class BolidEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long bolidId;
@@ -13,15 +14,6 @@ public class Bolid {
     private short bolidPace;
     private short aerodynamicRating;
     private short reliability;
-
-    public Bolid(){}
-    public Bolid(long bolidId, String bolidModel, short bolidPace, short aerodynamicRating, short reliability) {
-        this.bolidId = bolidId;
-        this.bolidModel = bolidModel;
-        this.bolidPace = bolidPace;
-        this.aerodynamicRating = aerodynamicRating;
-        this.reliability = reliability;
-    }
 
     @Override
     public String toString() {

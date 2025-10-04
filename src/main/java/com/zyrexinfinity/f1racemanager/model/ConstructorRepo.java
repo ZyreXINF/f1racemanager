@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ConstructorRepo extends JpaRepository<Constructor,Long> {
-    List<Constructor> findByTeamIdBetween(long startId, long endId);
+public interface ConstructorRepo extends JpaRepository<ConstructorEntity,Long> {
+    List<ConstructorEntity> findByTeamIdBetween(long startId, long endId);
 }
