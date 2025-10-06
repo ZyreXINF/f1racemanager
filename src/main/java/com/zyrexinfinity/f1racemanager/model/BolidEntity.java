@@ -11,17 +11,13 @@ public class BolidEntity {
 
     private String bolidModel;
 
-    private short bolidPace;
-    private short aerodynamicRating;
-    private short reliability;
+    private int reliability;
 
     @Override
     public String toString() {
         return "Bolid{" +
                 "bolidId=" + bolidId +
                 ", bolidModel='" + bolidModel + '\'' +
-                ", bolidPace=" + bolidPace +
-                ", aerodynamicRating=" + aerodynamicRating +
                 ", reliability=" + reliability +
                 '}';
     }
@@ -38,27 +34,11 @@ public class BolidEntity {
         this.bolidModel = bolidModel;
     }
 
-    public short getBolidPace() {
-        return bolidPace;
-    }
-
-    public void setBolidPace(short bolidPace) {
-        this.bolidPace = bolidPace;
-    }
-
-    public short getAerodynamicRating() {
-        return aerodynamicRating;
-    }
-
-    public void setAerodynamicRating(short aerodynamicRating) {
-        this.aerodynamicRating = aerodynamicRating;
-    }
-
-    public short getReliability() {
+    public int getReliability() {
         return reliability;
     }
 
-    public void setReliability(short reliability) {
+    public void setReliability(int reliability) {
         this.reliability = reliability;
     }
 }

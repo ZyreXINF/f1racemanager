@@ -11,7 +11,7 @@ public class ConstructorEntity {
     private long teamId;
     private String teamName;
 
-    private short crewRating; //affect overall pitstop time rating
+    private int crewRating;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bolidId")
@@ -40,11 +40,11 @@ public class ConstructorEntity {
         this.teamName = teamName;
     }
 
-    public short getCrewRating() {
+    public int getCrewRating() {
         return crewRating;
     }
 
-    public void setCrewRating(short crewRating) {
+    public void setCrewRating(int crewRating) {
         this.crewRating = crewRating;
     }
 

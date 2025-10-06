@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DriverRepo extends JpaRepository<DriverEntitiy, Long> {
-    List<DriverEntitiy> findByDriverIdBetween(long startId, long endId);
+public interface DriverRepo extends JpaRepository<DriverEntity, Long> {
+    List<DriverEntity> findByDriverIdBetween(long startId, long endId);
 }

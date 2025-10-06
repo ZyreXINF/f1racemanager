@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="driver")
-public class DriverEntitiy {
+public class DriverEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long driverId;
@@ -18,11 +18,10 @@ public class DriverEntitiy {
     @JsonIgnore
     private ConstructorEntity team;
 
-    private short driverRating;
-    private short driverExperience;
-    private short driverRacecraft;
-    private short driverAwareness;
-    private short driverPace;
+    //affects crash probability
+    private int driverAwareness;
+    //affects lap times
+    private int driverPace;
 
     @Override
     public String toString() {
@@ -30,9 +29,6 @@ public class DriverEntitiy {
                 "driverId=" + driverId +
                 ", fullName='" + fullName + '\'' +
                 ", nationality='" + nationality + '\'' +
-                ", driverRating=" + driverRating +
-                ", driverExperience=" + driverExperience +
-                ", driverRacecraft=" + driverRacecraft +
                 ", driverAwareness=" + driverAwareness +
                 ", driverPace=" + driverPace +
                 ", team=" + team.getTeamId() +
@@ -67,43 +63,19 @@ public class DriverEntitiy {
         this.team = team;
     }
 
-    public short getDriverRating() {
-        return driverRating;
-    }
-
-    public void setDriverRating(short driverRating) {
-        this.driverRating = driverRating;
-    }
-
-    public short getDriverExperience() {
-        return driverExperience;
-    }
-
-    public void setDriverExperience(short driverExperience) {
-        this.driverExperience = driverExperience;
-    }
-
-    public short getDriverRacecraft() {
-        return driverRacecraft;
-    }
-
-    public void setDriverRacecraft(short driverRacecraft) {
-        this.driverRacecraft = driverRacecraft;
-    }
-
-    public short getDriverAwareness() {
+    public int getDriverAwareness() {
         return driverAwareness;
     }
 
-    public void setDriverAwareness(short driverAwareness) {
+    public void setDriverAwareness(int driverAwareness) {
         this.driverAwareness = driverAwareness;
     }
 
-    public short getDriverPace() {
+    public int getDriverPace() {
         return driverPace;
     }
 
-    public void setDriverPace(short driverPace) {
+    public void setDriverPace(int driverPace) {
         this.driverPace = driverPace;
     }
 }

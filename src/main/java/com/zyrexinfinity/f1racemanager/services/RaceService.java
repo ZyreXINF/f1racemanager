@@ -60,6 +60,7 @@ public class RaceService {
     }
 
     private void startRace(){
+        raceStatus = RaceStatus.STARTED;
         scheduler.scheduleAtFixedRate(() -> {
             System.out.println("RaceTime: " + sessionTime.toSeconds());
             sessionTime.plusSeconds(1);
@@ -73,7 +74,6 @@ public class RaceService {
     }
     //Main logic for race
     private void updateRace(){
-        raceStatus = RaceStatus.STARTED;
         while (raceStatus == RaceStatus.STARTED){
             drivers.forEach(driver -> {
                 driver.projectLapTime(track);
@@ -83,8 +83,8 @@ public class RaceService {
 
     private boolean fetchData(){
         try{
-            settingsService.getDriverList().forEach((driverEntitiy) -> {
-                drivers.add(new Driver(driverEntitiy));
+            settingsService.getDriverList().forEach((driverEntity) -> {
+                drivers.add(new Driver(driverEntity));
             });
             teams = settingsService.getConstructorList();
             bolids = settingsService.getBolidList();

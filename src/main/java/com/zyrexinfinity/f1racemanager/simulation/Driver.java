@@ -2,54 +2,55 @@ package com.zyrexinfinity.f1racemanager.simulation;
 
 import com.zyrexinfinity.f1racemanager.enums.DriverStatus;
 import com.zyrexinfinity.f1racemanager.enums.Track;
-import com.zyrexinfinity.f1racemanager.model.DriverEntitiy;
+import com.zyrexinfinity.f1racemanager.model.DriverEntity;
 
-import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Driver {
     private final String fullName;
     private final String nationality;
-    private final double driverRating;
-    private final double driverExperience;
-    private final double driverRacecraft;
     private final double driverAwareness;
     private final double driverPace;
 
-    private Duration raceTime;
+    private long raceTime;
     private int currentLap;
     private DriverStatus status = DriverStatus.DNS;
-    private double lapProgression;
 
-    public Driver(DriverEntitiy driverBluePrint) {
+    public Driver(DriverEntity driverBluePrint) {
         this.fullName = driverBluePrint.getFullName();
         this.nationality = driverBluePrint.getNationality();
-//        this.driverRating = (double) driverBluePrint.getDriverRating() /100;
-        this.driverRating = (driverBluePrint.getDriverRating() - 60) / (100.0 - 60);
-        this.driverExperience = (double) driverBluePrint.getDriverExperience() /100;
-        this.driverRacecraft = (double) driverBluePrint.getDriverRacecraft() /100;
+
         this.driverAwareness = (double) driverBluePrint.getDriverAwareness()/100;
-        this.driverPace = 1.94 - ((double) driverBluePrint.getDriverPace() /100);
+        this.driverPace = ((double) driverBluePrint.getDriverPace() - 65) / (100 - 65);
 
         this.currentLap = 1;
-        this.raceTime = Duration.ZERO;
-        this.lapProgression = 0;
+        this.raceTime = 0;
     }
 
-    public void projectLapTime(Track track){
-        double trackLapTime = track.getLapTime();
+    public long projectLapTime(Track track){
+        long lapTime = 0;
+        for (byte i = 1; i <= 3; i++) {
+            lapTime += projectSectorTime(track, i);
+        }
+        raceTime += lapTime;
+        currentLap++;
+        return lapTime;
+    }
 
-        double minLapTime = trackLapTime - 2.0; // best possible lap
-        double maxLapTime = trackLapTime + 3.0; // worst possible lap
-        double centerLap = maxLapTime - (maxLapTime - minLapTime) * driverRating;
+    public long projectSectorTime(Track track, byte sectorNumber){
+        long bestSectorTime = track.getSectorTime(sectorNumber) - 1_000;
+        long worstSectorTime = track.getSectorTime(sectorNumber) + 1_000;
 
-        double maxDeviation = 0.5 + (1.0 - driverRating) * 1.5;
+        double driverAverageSectorTime = worstSectorTime - (worstSectorTime - bestSectorTime) * driverPace;
 
-        double lapTimeSeconds = centerLap + (ThreadLocalRandom.current().nextDouble() * 2 - 1) * maxDeviation;
-        lapTimeSeconds = Math.round(lapTimeSeconds * 1000.0) / 1000.0;
+        double minDeviation = 0.005;  // 0.5%
+        double maxDeviation = 0.03;   // 3%
+        double relativeDeviation = maxDeviation - (maxDeviation - minDeviation) * driverPace;
 
-        Duration lapTime = Duration.ofNanos(Math.round(lapTimeSeconds * 1_000_000_000));
-        raceTime.plusNanos(lapTime.toNanos());
+        double randomFactor = 1.0 + (ThreadLocalRandom.current().nextDouble() * 2 - 1) * relativeDeviation;
+
+        long sectorTime = Math.round(driverAverageSectorTime * randomFactor);
+        return sectorTime;
     }
 
     public String getFullName() {
@@ -60,18 +61,6 @@ public class Driver {
         return nationality;
     }
 
-    public double getDriverRating() {
-        return driverRating;
-    }
-
-    public double getDriverExperience() {
-        return driverExperience;
-    }
-
-    public double getDriverRacecraft() {
-        return driverRacecraft;
-    }
-
     public double getDriverAwareness() {
         return driverAwareness;
     }
@@ -80,11 +69,11 @@ public class Driver {
         return driverPace;
     }
 
-    public Duration getRaceTime() {
+    public long getRaceTime() {
         return raceTime;
     }
 
-    public void setRaceTime(Duration raceTime) {
+    public void setRaceTime(long raceTime) {
         this.raceTime = raceTime;
     }
 
@@ -102,13 +91,5 @@ public class Driver {
 
     public void setStatus(DriverStatus status) {
         this.status = status;
-    }
-
-    public double getLapProgression() {
-        return lapProgression;
-    }
-
-    public void setLapProgression(double lapProgression) {
-        this.lapProgression = lapProgression;
     }
 }

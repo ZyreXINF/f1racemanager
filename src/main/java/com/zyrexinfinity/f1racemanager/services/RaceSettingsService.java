@@ -35,7 +35,7 @@ public class RaceSettingsService {
         return false;
     }
 
-    public List<DriverEntitiy> getDriverList(){
+    public List<DriverEntity> getDriverList(){
         if(driverSettingsDefault){
             return driverRepo.findByDriverIdBetween(1,20);
         }else{
