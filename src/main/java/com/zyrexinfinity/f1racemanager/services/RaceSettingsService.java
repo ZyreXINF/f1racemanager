@@ -1,6 +1,9 @@
 package com.zyrexinfinity.f1racemanager.services;
 
 import com.zyrexinfinity.f1racemanager.model.*;
+import com.zyrexinfinity.f1racemanager.repository.BolidRepo;
+import com.zyrexinfinity.f1racemanager.repository.ConstructorRepo;
+import com.zyrexinfinity.f1racemanager.repository.DriverRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

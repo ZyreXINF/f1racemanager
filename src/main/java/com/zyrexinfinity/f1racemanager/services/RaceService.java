@@ -1,5 +1,6 @@
 package com.zyrexinfinity.f1racemanager.services;
 
+import com.zyrexinfinity.f1racemanager.enums.DriverStatus;
 import com.zyrexinfinity.f1racemanager.enums.RaceFlag;
 import com.zyrexinfinity.f1racemanager.enums.RaceStatus;
 import com.zyrexinfinity.f1racemanager.enums.Track;
@@ -9,7 +10,9 @@ import com.zyrexinfinity.f1racemanager.simulation.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -23,17 +26,19 @@ public class RaceService {
     @Autowired
     PrintService printService;
 
+    //Race vars
     private RaceStatus raceStatus = RaceStatus.WAITING;
     private Track track;
     private RaceFlag raceFlag;
+    private long sessionTime = 0;
+    private Driver driverIterator;
 
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private Duration sessionTime = Duration.ZERO;
 
 
-    private List<Driver> drivers;
-    private List<ConstructorEntity> teams;
-    private List<BolidEntity> bolids;
+    private List<Driver> drivers = new ArrayList<>();
+    private List<ConstructorEntity> teams = new ArrayList<>();
+    private List<BolidEntity> bolids = new ArrayList<>();
 
     public void initializeRace(){
         switch (raceStatus){
@@ -44,15 +49,15 @@ public class RaceService {
 //                    printService.printSection("Drivers", drivers);
 //                    printService.printSection("Teams", teams);
 //                    printService.printSection("Bolids", bolids);
-                    System.out.println("Successfully fetched Data");
                     raceStatus = RaceStatus.READY;
                 }else{
                     raceStatus = RaceStatus.FAILED;
                 }
-
             //TODO Move it so the race starts via button click
             case RaceStatus.READY:
                 startRace();
+            case RaceStatus.STARTED:
+                break;
             default:
                 printService.printErrorMessage("Couldn't recognise race status");
                 break;
@@ -61,11 +66,18 @@ public class RaceService {
 
     private void startRace(){
         raceStatus = RaceStatus.STARTED;
+        raceFlag = RaceFlag.GREEN_FLAG;
+        drivers.forEach(driver -> {
+            driver.setStatus(DriverStatus.RACING);
+        });
+        Collections.shuffle(drivers);
         scheduler.scheduleAtFixedRate(() -> {
-            System.out.println("RaceTime: " + sessionTime.toSeconds());
-            sessionTime.plusSeconds(1);
+            System.out.println("RaceTime: " + sessionTime);
+            sessionTime++;
             updateRace();
         }, 0, 1, TimeUnit.SECONDS);
+
+
     }
 
     private void stopRace(){
@@ -74,10 +86,13 @@ public class RaceService {
     }
     //Main logic for race
     private void updateRace(){
-        while (raceStatus == RaceStatus.STARTED){
-            drivers.forEach(driver -> {
-                driver.projectLapTime(track);
-            });
+        if(raceStatus == RaceStatus.STARTED) {
+            for (int i = 0; i < drivers.size(); i++) {
+                driverIterator = drivers.get(i);
+                printService.printDriverSessionData(driverIterator, i+1);
+                long lapTime = driverIterator.projectLapTime(track);
+            }
+            drivers.sort(Comparator.comparingLong(Driver::getRaceTime));
         }
     }
 
@@ -93,14 +108,11 @@ public class RaceService {
             return true;
         }catch (Exception e){
             printService.printErrorMessage("There was a problem fetching data");
+            e.printStackTrace();
             return false;
         }
     }
     private void applySettings(){
-        drivers.forEach((_)->{
-
-        });
         track = Track.Monza;
-        raceFlag = RaceFlag.GREEN_FLAG;
     }
 }

@@ -21,9 +21,9 @@ public class Driver {
         this.nationality = driverBluePrint.getNationality();
 
         this.driverAwareness = (double) driverBluePrint.getDriverAwareness()/100;
-        this.driverPace = ((double) driverBluePrint.getDriverPace() - 65) / (100 - 65);
+        this.driverPace = Math.round(((double) driverBluePrint.getDriverPace() - 65) / (100 - 65) * 1000.0) / 1000.0;
 
-        this.currentLap = 1;
+        this.currentLap = 0;
         this.raceTime = 0;
     }
 
@@ -51,6 +51,19 @@ public class Driver {
 
         long sectorTime = Math.round(driverAverageSectorTime * randomFactor);
         return sectorTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "fullName='" + fullName + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", driverAwareness=" + driverAwareness +
+                ", driverPace=" + driverPace +
+                ", raceTime=" + raceTime +
+                ", currentLap=" + currentLap +
+                ", status=" + status +
+                '}';
     }
 
     public String getFullName() {
