@@ -1,9 +1,6 @@
 package com.zyrexinfinity.f1racemanager.services;
 
-import com.zyrexinfinity.f1racemanager.enums.DriverStatus;
-import com.zyrexinfinity.f1racemanager.enums.RaceFlag;
-import com.zyrexinfinity.f1racemanager.enums.RaceStatus;
-import com.zyrexinfinity.f1racemanager.enums.Track;
+import com.zyrexinfinity.f1racemanager.enums.*;
 import com.zyrexinfinity.f1racemanager.model.BolidEntity;
 import com.zyrexinfinity.f1racemanager.model.ConstructorEntity;
 import com.zyrexinfinity.f1racemanager.simulation.Driver;
@@ -12,10 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -56,10 +53,14 @@ public class RaceService {
             //TODO Move it so the race starts via button click
             case RaceStatus.READY:
                 startRace();
+                break;
             case RaceStatus.STARTED:
                 break;
+            case RaceStatus.FINISHED:
+                printService.printColoredMessage("Race already finished",MessageColor.BLUE);
+                break;
             default:
-                printService.printErrorMessage("Couldn't recognise race status");
+                printService.printColoredMessage("Couldn't recognise race status",MessageColor.RED);
                 break;
         }
     }
@@ -71,6 +72,7 @@ public class RaceService {
             driver.setStatus(DriverStatus.RACING);
         });
         Collections.shuffle(drivers);
+        setStartingPosition();
         scheduler.scheduleAtFixedRate(() -> {
             System.out.println("RaceTime: " + sessionTime);
             sessionTime++;
@@ -81,18 +83,56 @@ public class RaceService {
     }
 
     private void stopRace(){
-        raceStatus = RaceStatus.FINISHED;
         scheduler.shutdown();
+        raceStatus = RaceStatus.FINISHED;
+        System.out.println("\nRACE FINISHED\n");
+        printService.printRaceResult(drivers);
     }
+
     //Main logic for race
     private void updateRace(){
         if(raceStatus == RaceStatus.STARTED) {
             for (int i = 0; i < drivers.size(); i++) {
                 driverIterator = drivers.get(i);
+                if(driverIterator.getStatus() == DriverStatus.RACING){
+                    driverIterator.checkDNF();
+                    long lapTime = driverIterator.projectLapTime(track);
+                }
                 printService.printDriverSessionData(driverIterator, i+1);
-                long lapTime = driverIterator.projectLapTime(track);
             }
-            drivers.sort(Comparator.comparingLong(Driver::getRaceTime));
+            if(drivers.get(0).getCurrentLap() == track.getLapsNumber()){
+                drivers.forEach(driver -> {
+                    if(driver.getStatus() == DriverStatus.RACING){
+                        driver.setStatus(DriverStatus.Finished);
+                    }
+                });
+                stopRace();
+            }
+            sortPositions();
+        }
+    }
+
+    private void sortPositions(){
+        drivers.sort((d1, d2) -> {
+            boolean d1Dnf = d1.getStatus() == DriverStatus.CrashDNF || d1.getStatus() == DriverStatus.ReliabilityDNF;
+            boolean d2Dnf = d2.getStatus() == DriverStatus.CrashDNF || d2.getStatus() == DriverStatus.ReliabilityDNF;
+
+            if (!d1Dnf && !d2Dnf) {
+                return Long.compare(d1.getRaceTime(), d2.getRaceTime());
+            }
+
+            if (d1Dnf && d2Dnf) {
+                return Long.compare(d2.getRaceTime(), d1.getRaceTime());
+            }
+
+            return d1Dnf ? 1 : -1;
+        });
+    }
+
+    private void setStartingPosition(){
+        for (int i = drivers.size()-1; i >= 0; i--) {
+            System.out.println(i);
+            drivers.get(i).setRaceTime(i*200);
         }
     }
 
@@ -107,12 +147,16 @@ public class RaceService {
             System.out.println("Successfully fetched Data");
             return true;
         }catch (Exception e){
-            printService.printErrorMessage("There was a problem fetching data");
+            printService.printColoredMessage("There was a problem fetching data", MessageColor.RED);
             e.printStackTrace();
             return false;
         }
     }
+
     private void applySettings(){
         track = Track.Monza;
+        drivers.forEach(driver -> {
+            driver.setDriverPace(driver.getDriverPace() * (1.0 + ThreadLocalRandom.current().nextDouble(-0.01, 0.01)));
+        });
     }
 }

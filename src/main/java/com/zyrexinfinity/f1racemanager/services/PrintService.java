@@ -1,5 +1,7 @@
 package com.zyrexinfinity.f1racemanager.services;
 
+import com.zyrexinfinity.f1racemanager.enums.DriverStatus;
+import com.zyrexinfinity.f1racemanager.enums.MessageColor;
 import com.zyrexinfinity.f1racemanager.simulation.Driver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,12 +14,12 @@ public class PrintService {
     private String appVersion;
 
     public static final String RESET = "\u001B[0m";
-    public static final String RED = "\u001B[31m";
-    public static final String GREEN = "\u001B[32m";
-    public static final String YELLOW = "\u001B[33m";
-    public static final String BLUE = "\u001B[34m";
-    public static final String PURPLE = "\u001B[35m";
-    public static final String CYAN = "\u001B[36m";
+    public static final String RED = MessageColor.RED.getColor();
+    public static final String YELLOW = MessageColor.YELLOW.getColor();
+    public static final String GREEN = MessageColor.GREEN.getColor();
+    public static final String BLUE = MessageColor.BLUE.getColor();
+    public static final String CYAN = MessageColor.CYAN.getColor();
+    public static final String PURPLE = MessageColor.PURPLE.getColor();
 
     public static <T> void printSection(String title, List<T> items) {
         System.out.println("\n========================================================================");
@@ -26,16 +28,42 @@ public class PrintService {
         System.out.println("========================================================================");
     }
 
-    public void printDriverSessionData(Driver driver, int driverPositon){
-        System.out.println("\n================================================"
-                + "\nDriver: " + YELLOW + driver.getFullName() + RESET
-                + "\nPosition: " + GREEN + driverPositon + RESET
-                + "\nLap №: " + PURPLE + driver.getCurrentLap() + RESET
-                + "\nRace time: " + PURPLE + driver.getRaceTime() + RESET
-                + "\n================================================");
+    public void printRaceResult(List<Driver> drivers){
+        Driver driver;
+        for (int i = 0; i < drivers.size(); i++) {
+            driver = drivers.get(i);
+            String statusColor = driver.getStatus() == DriverStatus.Finished ? GREEN : RED;
+            String nameColor = driver.getStatus() == DriverStatus.Finished ? CYAN : BLUE;
 
+
+            System.out.println(PURPLE + "p" + (i+1) + RESET + ": "
+                    + nameColor + driver.getFullName() + RESET
+                    + statusColor + " | " + driver.getStatus() + RESET);
+        }
     }
-    public void printErrorMessage(String item){
-        System.out.println(RED + item + RESET);
+
+    public void printDriverSessionData(Driver driver, int driverPositon){
+        boolean isRacing = DriverStatus.RACING == driver.getStatus();
+
+        String nameColor = isRacing ? CYAN : BLUE;
+        String statusColor = isRacing ? GREEN : RED;
+        String lapColor = isRacing ? YELLOW : RED;
+        String raceTimeColor = isRacing ? RESET : RED;
+
+        System.out.println("\n================================================");
+        System.out.println("Driver: " + nameColor + driver.getFullName() + RESET);
+        System.out.println("Status: " + statusColor + driver.getStatus() + RESET);
+
+        if (isRacing) {
+            System.out.println("Position: " + PURPLE + driverPositon + RESET);
+        }
+
+        System.out.println("Lap №: " + lapColor + driver.getCurrentLap() + RESET);
+        System.out.println("Race time: " + raceTimeColor + driver.getRaceTime() + RESET);
+        System.out.println("================================================");
+    }
+
+    public void printColoredMessage(String item, MessageColor mc){
+        System.out.println(mc.getColor() + item + RESET);
     }
 }

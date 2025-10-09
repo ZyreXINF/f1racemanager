@@ -11,13 +11,15 @@ public class BolidEntity {
 
     private String bolidModel;
 
+    private int aerodynamicRating;
     private int reliability;
 
     @Override
     public String toString() {
-        return "Bolid{" +
+        return "BolidEntity{" +
                 "bolidId=" + bolidId +
                 ", bolidModel='" + bolidModel + '\'' +
+                ", aerodynamicRating=" + aerodynamicRating +
                 ", reliability=" + reliability +
                 '}';
     }
@@ -32,6 +34,18 @@ public class BolidEntity {
 
     public void setBolidModel(String bolidModel) {
         this.bolidModel = bolidModel;
+    }
+
+    public void setBolidId(long bolidId) {
+        this.bolidId = bolidId;
+    }
+
+    public int getAerodynamicRating() {
+        return aerodynamicRating;
+    }
+
+    public void setAerodynamicRating(int aerodynamicRating) {
+        this.aerodynamicRating = aerodynamicRating;
     }
 
     public int getReliability() {

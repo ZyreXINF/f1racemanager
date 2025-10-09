@@ -1,7 +1,5 @@
 package com.zyrexinfinity.f1racemanager.enums;
 
-import java.time.Duration;
-
 public enum Track {
     Monza(53, 26243,26311,26266);
 
