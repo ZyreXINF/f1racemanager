@@ -12,7 +12,7 @@ public class RaceController {
 
     @RequestMapping("/startRace")
     public String race(){
-        raceService.initializeRace();
+//        raceService.initializeRace();
         return "race.html";
     }
 }

@@ -4,9 +4,13 @@ import com.zyrexinfinity.f1racemanager.model.*;
 import com.zyrexinfinity.f1racemanager.repository.BolidRepo;
 import com.zyrexinfinity.f1racemanager.repository.ConstructorRepo;
 import com.zyrexinfinity.f1racemanager.repository.DriverRepo;
+import com.zyrexinfinity.f1racemanager.simulation.Bolid;
+import com.zyrexinfinity.f1racemanager.simulation.Driver;
+import com.zyrexinfinity.f1racemanager.simulation.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,23 +42,35 @@ public class RaceSettingsService {
         return false;
     }
 
-    public List<DriverEntity> getDriverList(){
+    public List<Driver> getDriverList(){
+        List<Driver> drivers = new ArrayList<>();
         if(driverSettingsDefault){
-            return driverRepo.findByDriverIdBetween(1,20);
+            driverRepo.findByDriverIdBetween(1,20).forEach((driverEntity) -> {
+                drivers.add(new Driver(driverEntity));
+            });;
+            return drivers;
         }else{
             return null;
         }
     }
-    public List<ConstructorEntity> getConstructorList(){
+    public List<Team> getConstructorList(){
+        List<Team> teams = new ArrayList<>();
         if(constructorSettingsDefault){
-            return constructorRepo.findByTeamIdBetween(1,10);
+            constructorRepo.findByTeamIdBetween(1,10).forEach(constructorEntity -> {
+                teams.add(new Team(constructorEntity));
+            });
+            return teams;
         }else{
             return null;
         }
     }
-    public List<BolidEntity> getBolidList(){
+    public List<Bolid> getBolidList(){
+        List<Bolid> bolids = new ArrayList<>();
         if(bolidSettingsDefault){
-            return bolidRepo.findByBolidIdBetween(1,10);
+            bolidRepo.findByBolidIdBetween(1,10).forEach(bolidEntity -> {
+                bolids.add(new Bolid(bolidEntity));
+            });
+            return bolids;
         }else{
             return null;
         }

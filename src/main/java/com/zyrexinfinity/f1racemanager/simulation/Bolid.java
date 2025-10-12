@@ -20,7 +20,7 @@ public class Bolid {
 
     public boolean checkEngineFailure(){
         double baseChance = 0.001;   // 0.1%
-        double maxAdded = 0.003;     // +0.4%
+        double maxAdded = 0.001;     // +0.2%
         double chance = baseChance + (maxAdded * reliability);
         return random.nextDouble() < chance;
     }

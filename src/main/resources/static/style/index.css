@@ -1,3 +1,20 @@
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.background {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top, #ffffff, #c4c4c4);
+    z-index: -1;
+    opacity: 1; /* Keep it fully visible */
+}
+
+
 ul{
     list-style-type: none;
     margin: 0;

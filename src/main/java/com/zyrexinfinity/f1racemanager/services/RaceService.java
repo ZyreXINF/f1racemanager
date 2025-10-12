@@ -33,9 +33,7 @@ public class RaceService {
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 
-    private List<Driver> drivers = new ArrayList<>();
-    private List<ConstructorEntity> teams = new ArrayList<>();
-    private List<BolidEntity> bolids = new ArrayList<>();
+    private List<Driver> drivers;
 
     public void initializeRace(){
         switch (raceStatus){
@@ -138,11 +136,7 @@ public class RaceService {
 
     private boolean fetchData(){
         try{
-            settingsService.getDriverList().forEach((driverEntity) -> {
-                drivers.add(new Driver(driverEntity));
-            });
-            teams = settingsService.getConstructorList();
-            bolids = settingsService.getBolidList();
+            drivers = settingsService.getDriverList();
 
             System.out.println("Successfully fetched Data");
             return true;

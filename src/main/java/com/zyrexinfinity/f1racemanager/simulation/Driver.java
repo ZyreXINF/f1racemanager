@@ -77,8 +77,8 @@ public class Driver {
     }
 
     private boolean checkCrash() {
-        double baseChance = 0.001;
-        double maxAdded = 0.001;
+        double baseChance = 0.0005; //0.05%
+        double maxAdded = 0.001; //+0.1% (max: 0.15%)
         double chance = baseChance + (maxAdded * driverAwareness);
         return random.nextDouble() < chance;
     }
