@@ -47,7 +47,7 @@ public class Bolid {
     }
 
     public void setReliability(double reliability) {
-        this.reliability = Math.round(((100 - reliability) / 60.0) * 1000.0) / 1000.0;;
+        this.reliability = Math.round(((100 - reliability) / 60.0) * 1000.0) / 1000.0;
     }
 
     public double getAerodynamicRating() {

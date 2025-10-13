@@ -1,13 +1,10 @@
 package com.zyrexinfinity.f1racemanager.services;
 
 import com.zyrexinfinity.f1racemanager.enums.*;
-import com.zyrexinfinity.f1racemanager.model.BolidEntity;
-import com.zyrexinfinity.f1racemanager.model.ConstructorEntity;
 import com.zyrexinfinity.f1racemanager.simulation.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -28,56 +25,47 @@ public class RaceService {
     private Track track;
     private RaceFlag raceFlag;
     private long sessionTime = 0;
-    private Driver driverIterator;
 
-    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private List<Driver> drivers;
 
-    public void initializeRace(){
-        switch (raceStatus){
-            case RaceStatus.WAITING:
-                if(fetchData()){
-                    //TODO apply settings set by user for the race
-                    applySettings();
-//                    printService.printSection("Drivers", drivers);
-//                    printService.printSection("Teams", teams);
-//                    printService.printSection("Bolids", bolids);
-                    raceStatus = RaceStatus.READY;
-                }else{
-                    raceStatus = RaceStatus.FAILED;
-                }
-            //TODO Move it so the race starts via button click
-            case RaceStatus.READY:
-                startRace();
-                break;
-            case RaceStatus.STARTED:
-                break;
-            case RaceStatus.FINISHED:
-                printService.printColoredMessage("Race already finished",MessageColor.BLUE);
-                break;
-            default:
-                printService.printColoredMessage("Couldn't recognise race status",MessageColor.RED);
-                break;
+    public boolean initializeRace() {
+        if (raceStatus == RaceStatus.WAITING) {
+            if (fetchData()) {
+                //TODO apply settings set by user for the race
+                applySettings();
+                raceStatus = RaceStatus.READY;
+                Collections.shuffle(drivers);
+                return true;
+            } else {
+                raceStatus = RaceStatus.FAILED;
+                return false;
+            }
+        }else{
+            printService.printColoredMessage("Invalid raceStatus",MessageColor.RED);
+            System.out.println("RaceStatus: " + raceStatus);
+            return false;
         }
     }
 
-    private void startRace(){
-        raceStatus = RaceStatus.STARTED;
-        raceFlag = RaceFlag.GREEN_FLAG;
-        drivers.forEach(driver -> {
-            driver.setStatus(DriverStatus.RACING);
-        });
-        Collections.shuffle(drivers);
-        setStartingPosition();
-        scheduler.scheduleAtFixedRate(() -> {
-            System.out.println("RaceTime: " + sessionTime);
-            sessionTime++;
-            updateRace();
-        }, 0, 1, TimeUnit.SECONDS);
 
-
+    public void startRace(){
+        if(raceStatus == RaceStatus.READY){
+            raceStatus = RaceStatus.STARTED;
+            raceFlag = RaceFlag.GREEN_FLAG;
+            drivers.forEach(driver -> {
+                driver.setStatus(DriverStatus.RACING);
+            });
+            setStartingPosition();
+            scheduler.scheduleAtFixedRate(() -> {
+                System.out.println("RaceTime: " + sessionTime);
+                sessionTime++;
+                updateRace();
+            }, 0, 1, TimeUnit.SECONDS);
+        }else{
+            printService.printColoredMessage("The race is not ready or not properly set", MessageColor.RED);
+        }
     }
 
     private void stopRace(){
@@ -91,7 +79,7 @@ public class RaceService {
     private void updateRace(){
         if(raceStatus == RaceStatus.STARTED) {
             for (int i = 0; i < drivers.size(); i++) {
-                driverIterator = drivers.get(i);
+                Driver driverIterator = drivers.get(i);
                 if(driverIterator.getStatus() == DriverStatus.RACING){
                     driverIterator.checkDNF();
                     long lapTime = driverIterator.projectLapTime(track);
@@ -112,8 +100,8 @@ public class RaceService {
 
     private void sortPositions(){
         drivers.sort((d1, d2) -> {
-            boolean d1Dnf = d1.getStatus() == DriverStatus.CrashDNF || d1.getStatus() == DriverStatus.ReliabilityDNF;
-            boolean d2Dnf = d2.getStatus() == DriverStatus.CrashDNF || d2.getStatus() == DriverStatus.ReliabilityDNF;
+            boolean d1Dnf = d1.getStatus() == DriverStatus.CrashDNF || d1.getStatus() == DriverStatus.ReliabilityDNF || d1.getStatus() == DriverStatus.DNS;
+            boolean d2Dnf = d2.getStatus() == DriverStatus.CrashDNF || d2.getStatus() == DriverStatus.ReliabilityDNF || d2.getStatus() == DriverStatus.DNS;
 
             if (!d1Dnf && !d2Dnf) {
                 return Long.compare(d1.getRaceTime(), d2.getRaceTime());
@@ -130,7 +118,7 @@ public class RaceService {
     private void setStartingPosition(){
         for (int i = drivers.size()-1; i >= 0; i--) {
             System.out.println(i);
-            drivers.get(i).setRaceTime(i*200);
+            drivers.get(i).setRaceTime(i* 200L);
         }
     }
 
@@ -142,7 +130,6 @@ public class RaceService {
             return true;
         }catch (Exception e){
             printService.printColoredMessage("There was a problem fetching data", MessageColor.RED);
-            e.printStackTrace();
             return false;
         }
     }
@@ -152,5 +139,12 @@ public class RaceService {
         drivers.forEach(driver -> {
             driver.setDriverPace(driver.getDriverPace() * (1.0 + ThreadLocalRandom.current().nextDouble(-0.01, 0.01)));
         });
+    }
+
+    public List<Driver> getDrivers() {
+        return drivers;
+    }
+    public RaceStatus getRaceStatus() {
+        return raceStatus;
     }
 }

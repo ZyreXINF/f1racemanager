@@ -14,6 +14,7 @@ public class Driver {
     private double driverPace;
 
     private Bolid bolid;
+    private Team team;
     private static final Random random = new Random();
 
     private long raceTime;
@@ -28,6 +29,7 @@ public class Driver {
         this.driverPace = Math.round(((double) driverBluePrint.getDriverPace() - 60) / (100 - 60) * 1000.0) / 1000.0;
 
         this.bolid = new Bolid(driverBluePrint.getTeam().getBolid());
+        this.team = new Team(driverBluePrint.getTeam());
 
         this.currentLap = 0;
         this.raceTime = 0;
@@ -91,6 +93,7 @@ public class Driver {
                 ", nationality='" + nationality + '\'' +
                 ", driverAwareness=" + driverAwareness +
                 ", driverPace=" + driverPace +
+                ", bolid=" + bolid +
                 ", raceTime=" + raceTime +
                 ", currentLap=" + currentLap +
                 ", status=" + status +
@@ -110,7 +113,7 @@ public class Driver {
     }
 
     public void setDriverAwareness(double driverAwareness) {
-        this.driverAwareness = Math.round((double) (100-driverAwareness)/50.0 * 1000.0) / 1000.0;
+        this.driverAwareness = Math.round((100-driverAwareness) /50.0 * 1000.0) / 1000.0;
     }
 
     public double getDriverPace() {
@@ -118,7 +121,7 @@ public class Driver {
     }
 
     public void setDriverPace(double driverPace) {
-        this.driverPace = Math.round(((double) driverPace - 60) / (100 - 60) * 1000.0) / 1000.0;
+        this.driverPace = Math.round((driverPace - 60) / (100 - 60) * 1000.0) / 1000.0;
     }
 
     public Bolid getBolid() {
@@ -127,6 +130,14 @@ public class Driver {
 
     public void setBolid(Bolid bolid) {
         this.bolid = bolid;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public long getRaceTime() {
@@ -152,4 +163,5 @@ public class Driver {
     public void setStatus(DriverStatus status) {
         this.status = status;
     }
+
 }

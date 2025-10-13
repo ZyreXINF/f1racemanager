@@ -47,7 +47,7 @@ public class RaceSettingsService {
         if(driverSettingsDefault){
             driverRepo.findByDriverIdBetween(1,20).forEach((driverEntity) -> {
                 drivers.add(new Driver(driverEntity));
-            });;
+            });
             return drivers;
         }else{
             return null;

@@ -27,7 +27,7 @@ body {
 #menu {
     display: flex;                   /* flex container for two columns */
     justify-content: center;         /* center columns horizontally */
-    align-items: flex-start;         /* align top of columns */
+    align-items: flex-center;         /* align top of columns */
     gap: 3rem;                       /* big gap between columns */
     position: absolute;
     top: 50%;
@@ -48,6 +48,10 @@ body {
     gap: 0.6rem;
     width: 400px;           /* wider columns */
     max-width: 45%;         /* optional: prevent too wide on large screens */
+}
+
+ul, ol {
+  list-style: none;
 }
 
 
@@ -114,16 +118,16 @@ body {
 }
 
 /* === Team colors === */
-.driver-card.ferrari::before       { background-color: #DC0000; } /* Ferrari red */
-.driver-card.redbull::before       { background-color: #1E41FF; } /* Red Bull blue */
-.driver-card.mercedes::before      { background-color: #00D2BE; } /* Mercedes teal */
-.driver-card.mclaren::before       { background-color: #FF8700; } /* McLaren orange */
-.driver-card.astonmartin::before   { background-color: #006F62; } /* Aston Martin green */
-.driver-card.alpine::before        { background-color: #0090FF; } /* Alpine blue */
-.driver-card.williams::before      { background-color: #005AFF; } /* Williams blue */
-.driver-card.haas::before          { background-color: #B6BABD; } /* Haas grey */
-.driver-card.rb::before            { background-color: #2B4562; } /* RB dark */
-.driver-card.sauber::before        { background-color: #52E252; } /* Sauber green */
+#Ferrari::before       { background-color: #DC0000; } /* Ferrari red */
+#RedBull::before       { background-color: #1E41FF; } /* Red Bull blue */
+#Mercedes::before      { background-color: #00D2BE; } /* Mercedes teal */
+#McLaren::before       { background-color: #FF8700; } /* McLaren orange */
+#AstonMartin::before   { background-color: #006F62; } /* Aston Martin green */
+#Alpine::before        { background-color: #0090FF; } /* Alpine blue */
+#Williams::before      { background-color: #005AFF; } /* Williams blue */
+#Haas::before          { background-color: #B6BABD; } /* Haas grey */
+#RacingBulls::before   { background-color: #2B4562; } /* RB dark */
+#Sauber::before        { background-color: #52E252; } /* Sauber green */
 
 /* === Responsive tweaks === */
 @media (max-width: 900px) {

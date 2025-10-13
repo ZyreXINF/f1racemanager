@@ -6,9 +6,9 @@ public class Team {
     private String teamName;
     private int crewRating;
 
-    public Team(ConstructorEntity ce){
-        this.teamName = ce.getTeamName();
-        this.crewRating = ce.getCrewRating();
+    public Team(ConstructorEntity teamBluePrint){
+        this.teamName = teamBluePrint.getTeamName();
+        this.crewRating = teamBluePrint.getCrewRating();
     }
 
     public String getTeamName() {
