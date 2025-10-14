@@ -137,7 +137,9 @@ public class RaceService {
     private void applySettings(){
         track = Track.Monza;
         drivers.forEach(driver -> {
-            driver.setDriverPace(driver.getDriverPace() * (1.0 + ThreadLocalRandom.current().nextDouble(-0.01, 0.01)));
+            //TODO Balance this diabolical shit
+            double randomFactor = Math.round(ThreadLocalRandom.current().nextDouble(-0.01, 0.01) * 1000.0) / 1000.0;
+            driver.setDriverPace(driver.getDriverPace() * (1.0 + randomFactor));
         });
     }
 

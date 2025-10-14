@@ -118,16 +118,16 @@ ul, ol {
 }
 
 /* === Team colors === */
-#Ferrari::before       { background-color: #DC0000; } /* Ferrari red */
-#RedBull::before       { background-color: #1E41FF; } /* Red Bull blue */
-#Mercedes::before      { background-color: #00D2BE; } /* Mercedes teal */
-#McLaren::before       { background-color: #FF8700; } /* McLaren orange */
-#AstonMartin::before   { background-color: #006F62; } /* Aston Martin green */
-#Alpine::before        { background-color: #0090FF; } /* Alpine blue */
-#Williams::before      { background-color: #005AFF; } /* Williams blue */
-#Haas::before          { background-color: #B6BABD; } /* Haas grey */
-#RacingBulls::before   { background-color: #2B4562; } /* RB dark */
-#Sauber::before        { background-color: #52E252; } /* Sauber green */
+#Ferrari::before       { background-color: #DC0000; }
+#RedBull::before       { background-color: #1E41FF; }
+#Mercedes::before      { background-color: #00D2BE; }
+#McLaren::before       { background-color: #FF8700; }
+#AstonMartin::before   { background-color: #006F62; }
+#Alpine::before        { background-color: #0090FF; }
+#Williams::before      { background-color: #005AFF; }
+#Haas::before          { background-color: #B6BABD; }
+#RacingBulls::before   { background-color: #2B4562; }
+#Sauber::before        { background-color: #52E252; }
 
 /* === Responsive tweaks === */
 @media (max-width: 900px) {
