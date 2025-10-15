@@ -22,6 +22,7 @@ public class RaceController {
         if(raceInitialized){
             model.addAttribute("drivers", raceService.getDrivers());
         }
+        raceService.startRace();
         return "race.html";
     }
 }

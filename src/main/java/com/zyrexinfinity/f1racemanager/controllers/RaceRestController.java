@@ -1,5 +1,6 @@
 package com.zyrexinfinity.f1racemanager.controllers;
 
+import com.zyrexinfinity.f1racemanager.enums.RaceStatus;
 import com.zyrexinfinity.f1racemanager.services.RaceService;
 import com.zyrexinfinity.f1racemanager.simulation.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,18 @@ public class RaceRestController {
     @Autowired
     RaceService raceService;
 
-    @GetMapping("/getDriverPositions")
+    //TODO Secure requests with Spring Security Authentification
+
+    @GetMapping("/getDriverData")
     public List<Driver> getDriverPositions(){
-        System.out.println();
+        System.out.println("Requested Drivers Data");
         return raceService.getDrivers();
+    }
+
+    @GetMapping("/getRaceStatus")
+    public RaceStatus getRaceStatus(){
+        System.out.println("Requested Race Status Data");
+        return raceService.getRaceStatus();
     }
 
     @GetMapping("/test")

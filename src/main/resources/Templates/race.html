@@ -17,7 +17,7 @@
     <div id="menu">
         <div class="grid">
             <ul class="column">
-                <li th:each="driver, stat : ${drivers}" th:if="${stat.index} < 10">
+                <li th:each="driver, stat : ${drivers}" th:if="${stat.index} < 10" th:id="'Driver' + ${stat.index}">
                     <div class="driver-card" th:id="${driver.team.teamName}">
                         <div class="position" th:text="'P' + (${stat.index + 1})">PX</div>
                         <div class="name" th:text="${driver.fullName}">X</div>
@@ -26,7 +26,7 @@
                 </li>
             </ul>
             <ul class="column">
-                <li th:each="driver, stat : ${drivers}" th:if="${stat.index} >= 10">
+                <li th:each="driver, stat : ${drivers}" th:if="${stat.index} >= 10" th:id="'Driver' + ${stat.index}">
                     <div class="driver-card" th:id="${driver.team.teamName}">
                         <div class="position" th:id="'driverPos' + (${stat.index})" th:text="'P' + (${stat.index + 1})">PX</div>
                         <div class="name" th:id="'driverName' + (${stat.index})" th:text="${driver.fullName}">X</div>

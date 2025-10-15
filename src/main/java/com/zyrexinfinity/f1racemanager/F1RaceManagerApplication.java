@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EntityScan(basePackages = "com.zyrexinfinity.f1racemanager.model")
 @EnableJpaRepositories(basePackages = "com.zyrexinfinity.f1racemanager.repository")
-public class F1racemanagerApplication {
+public class F1RaceManagerApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(F1racemanagerApplication.class, args);
+		SpringApplication.run(F1RaceManagerApplication.class, args);
     }
 }

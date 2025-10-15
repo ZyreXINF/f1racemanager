@@ -5,6 +5,7 @@ import com.zyrexinfinity.f1racemanager.simulation.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -33,7 +34,6 @@ public class RaceService {
     public boolean initializeRace() {
         if (raceStatus == RaceStatus.WAITING) {
             if (fetchData()) {
-                //TODO apply settings set by user for the race
                 applySettings();
                 raceStatus = RaceStatus.READY;
                 Collections.shuffle(drivers);
@@ -64,7 +64,20 @@ public class RaceService {
                 updateRace();
             }, 0, 1, TimeUnit.SECONDS);
         }else{
-            printService.printColoredMessage("The race is not ready or not properly set", MessageColor.RED);
+            switch(raceStatus){
+                case RaceStatus.STARTED:
+                    printService.printColoredMessage("The race is already started", MessageColor.YELLOW);
+                    break;
+                case RaceStatus.FINISHED:
+                    printService.printColoredMessage("The race is already finished", MessageColor.YELLOW);
+                    break;
+                case RaceStatus.FAILED:
+                    printService.printColoredMessage("The race is failed to be initialized", MessageColor.RED);
+                    break;
+                case RaceStatus.WAITING:
+                    printService.printColoredMessage("The race is already initialized and await start", MessageColor.YELLOW);
+                    break;
+            }
         }
     }
 
@@ -94,12 +107,13 @@ public class RaceService {
                 });
                 stopRace();
             }
-            sortPositions();
+            drivers = sortPositions(drivers);
         }
     }
 
-    private void sortPositions(){
-        drivers.sort((d1, d2) -> {
+    private List<Driver> sortPositions(List<Driver> unsortedDriverList){
+        List<Driver> sortedCopy = new ArrayList<>(unsortedDriverList);
+        sortedCopy.sort((d1, d2) -> {
             boolean d1Dnf = d1.getStatus() == DriverStatus.CrashDNF || d1.getStatus() == DriverStatus.ReliabilityDNF || d1.getStatus() == DriverStatus.DNS;
             boolean d2Dnf = d2.getStatus() == DriverStatus.CrashDNF || d2.getStatus() == DriverStatus.ReliabilityDNF || d2.getStatus() == DriverStatus.DNS;
 
@@ -113,6 +127,7 @@ public class RaceService {
 
             return d1Dnf ? 1 : -1;
         });
+        return sortedCopy;
     }
 
     private void setStartingPosition(){
@@ -134,6 +149,7 @@ public class RaceService {
         }
     }
 
+    //TODO apply settings set by user for the race
     private void applySettings(){
         track = Track.Monza;
         drivers.forEach(driver -> {
@@ -144,7 +160,7 @@ public class RaceService {
     }
 
     public List<Driver> getDrivers() {
-        return drivers;
+        return sortPositions(new ArrayList<>(drivers));
     }
     public RaceStatus getRaceStatus() {
         return raceStatus;
