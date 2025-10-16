@@ -25,10 +25,11 @@ body {
 }
 
 #menu {
-    display: flex;                   /* flex container for two columns */
-    justify-content: center;         /* center columns horizontally */
-    align-items: flex-center;         /* align top of columns */
-    gap: 3rem;                       /* big gap between columns */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -54,17 +55,14 @@ ul, ol {
   list-style: none;
 }
 
-
-/* Grid columns */
 .grid {
     display: flex;
-    gap: 2rem;           /* space between two columns */
-    justify-content: center; /* center columns in #menu */
-    width: max-content;       /* shrink to only fit columns */
-    margin: 0 auto;           /* center inside #menu */
+    gap: 2rem;
+    justify-content: center;
+    width: max-content;
+    margin: 0 auto;
 }
 
-/* === Driver cards === */
 .driver-card {
     position: relative;
     display: flex;
@@ -78,10 +76,9 @@ ul, ol {
     border: 1px solid rgba(0,0,0,0.05);
     padding: 0.5rem 0.75rem 0.5rem 1rem;
     font-size: 0.95rem;
-    min-height: 44px;
+    min-height: 2rem;
 }
 
-/* Left color strip */
 .driver-card::before {
     content: "";
     position: absolute;
@@ -93,20 +90,6 @@ ul, ol {
     background-color: #ccc;
 }
 
-/* Make sure text is on top of the strip */
-.driver-card > * {
-    position: relative;
-    z-index: 2;
-}
-
-/* Layout inside each driver card */
-.position-name {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 600;
-}
-
 .position {
     font-weight: 700;
     width: 2.5rem;
@@ -115,6 +98,45 @@ ul, ol {
 .gap {
     font-size: 0.85rem;
     color: #444;
+}
+
+.button{
+    transition-duration: 0.5s;
+    font-family: "Open Sans", sans-serif;
+    font-size: 2rem;
+    width: 30%;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2rem;
+    border: 2px solid;
+    border-color:#c43939;
+}
+
+button:not(:disabled):hover{
+    background-color:#c43939;
+    color:white;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px #c43939;
+}
+button:disabled{
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid #646464;
+    border-radius: 1rem;
+    color: #646464;
+}
+button:disabled:hover{
+    transform: scale(0.9);
+    animation: shake 0.4s infinite;
+    cursor: not-allowed;
+}
+@keyframes shake {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    50% { transform: rotate(-1deg); }
+    75% { transform: rotate(1deg); }
+    100% { transform: rotate(0deg); }
 }
 
 /* === Team colors === */
@@ -129,10 +151,9 @@ ul, ol {
 #RacingBulls::before   { background-color: #2B4562; }
 #Sauber::before        { background-color: #52E252; }
 
-/* === Responsive tweaks === */
 @media (max-width: 900px) {
     #menu {
-        grid-template-columns: 1fr; /* single column on small screens */
+        grid-template-columns: 1fr;
         width: 85%;
     }
     .driver-card {

@@ -14,7 +14,7 @@ public class RaceController {
 
     private boolean raceInitialized = false;
 
-    @RequestMapping("/startRace")
+    @RequestMapping("/race")
     public String race(Model model){
         if(raceService.getRaceStatus() == RaceStatus.WAITING){
             raceInitialized = raceService.initializeRace();
@@ -22,7 +22,6 @@ public class RaceController {
         if(raceInitialized){
             model.addAttribute("drivers", raceService.getDrivers());
         }
-        raceService.startRace();
         return "race.html";
     }
 }

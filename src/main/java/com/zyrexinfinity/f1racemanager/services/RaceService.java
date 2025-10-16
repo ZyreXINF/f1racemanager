@@ -27,9 +27,23 @@ public class RaceService {
     private RaceFlag raceFlag;
     private long sessionTime = 0;
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private ScheduledExecutorService scheduler;
 
     private List<Driver> drivers;
+
+    public boolean restartRace(){
+        if(raceStatus == RaceStatus.FINISHED){
+            raceStatus = RaceStatus.WAITING;
+            sessionTime = 0;
+            drivers = null;
+            if(initializeRace()){
+                startRace();
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public boolean initializeRace() {
         if (raceStatus == RaceStatus.WAITING) {
@@ -51,6 +65,7 @@ public class RaceService {
 
 
     public void startRace(){
+        scheduler = Executors.newScheduledThreadPool(1);
         if(raceStatus == RaceStatus.READY){
             raceStatus = RaceStatus.STARTED;
             raceFlag = RaceFlag.GREEN_FLAG;

@@ -38,6 +38,7 @@ public class PrintService {
 
             System.out.println(PURPLE + "p" + (i+1) + RESET + ": "
                     + nameColor + driver.getFullName() + RESET
+                    + YELLOW + " - " + driver.getRaceTime() + RESET
                     + statusColor + " | " + driver.getStatus() + RESET);
         }
     }

@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class SettingsController {
-    @RequestMapping("/startMenu")
+    @RequestMapping("/controls")
     public String startMenu(){
-        return "startMenu.html";
+        return "controlsMenu.html";
     }
     //Settings Mapping
     @RequestMapping("/raceSettings")

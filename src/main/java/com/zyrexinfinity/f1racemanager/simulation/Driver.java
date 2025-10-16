@@ -63,7 +63,7 @@ public class Driver {
 
         long sectorTime = Math.round(driverAverageSectorTime * randomFactor);
 
-        double unpredictability = 1.0 + ThreadLocalRandom.current().nextDouble(-0.02, 0.02);
+        double unpredictability = 1.0 + ThreadLocalRandom.current().nextDouble(-0.005, 0.007);
         sectorTime = Math.round(sectorTime * unpredictability);
 
         return sectorTime;
