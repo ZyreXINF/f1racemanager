@@ -15,6 +15,7 @@
 
 <div class="container">
     <div id="menu">
+        <h1>Lap: </h1>
         <div class="grid">
             <ul class="column">
                 <li th:each="driver, stat : ${drivers}" th:if="${stat.index} < 10" th:id="'Driver' + ${stat.index}">

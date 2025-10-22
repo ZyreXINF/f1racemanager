@@ -77,6 +77,7 @@ ul, ol {
     padding: 0.5rem 0.75rem 0.5rem 1rem;
     font-size: 0.95rem;
     min-height: 2rem;
+    transition: transform 0.3s ease;
 }
 
 .driver-card::before {
@@ -159,4 +160,54 @@ button:disabled:hover{
     .driver-card {
         font-size: 0.9rem;
     }
+}
+.driver-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+}
+
+:root {
+    --flash-green: rgb(43, 255, 43);
+    --flash-red: rgb(196, 57, 57);
+    --flash-transparent: rgba(0, 0, 0, 0);
+}
+
+@keyframes flashGreen {
+    0%   { opacity: 0; background-color: var(--flash-transparent); }
+    10%  { opacity: 0.1; background-color: var(--flash-green); }
+    20%  { opacity: 0.15;  background-color: var(--flash-green); }
+    30%  { opacity: 0.2; background-color: var(--flash-green); }
+    40%  { opacity: 0.25;  background-color: var(--flash-green); }
+    50%  { opacity: 0.3; background-color: var(--flash-green); }
+    60%  { opacity: 0.25;  background-color: var(--flash-green); }
+    70%  { opacity: 0.2; background-color: var(--flash-green); }
+    80%  { opacity: 0.15;  background-color: var(--flash-green); }
+    90%  { opacity: 0.1; background-color: var(--flash-green); }
+    100% { opacity: 0; background-color: var(--flash-transparent); }
+}
+
+@keyframes flashRed {
+    0%   { opacity: 0; background-color: var(--flash-transparent); }
+    10%  { opacity: 0.1; background-color: var(--flash-red); }
+    20%  { opacity: 0.15;  background-color: var(--flash-red); }
+    30%  { opacity: 0.2; background-color: var(--flash-red); }
+    40%  { opacity: 0.25;  background-color: var(--flash-red); }
+    50%  { opacity: 0.3; background-color: var(--flash-red); }
+    60%  { opacity: 0.25;  background-color: var(--flash-red); }
+    70%  { opacity: 0.2; background-color: var(--flash-red); }
+    80%  { opacity: 0.15;  background-color: var(--flash-red); }
+    90%  { opacity: 0.1; background-color: var(--flash-red); }
+    100% { opacity: 0; background-color: var(--flash-transparent); }
+}
+
+.driver-card.flash-up::after {
+    animation: flashGreen 0.75s ease-in-out;
+}
+
+.driver-card.flash-down::after {
+    animation: flashRed 0.75s ease-in-out;
 }

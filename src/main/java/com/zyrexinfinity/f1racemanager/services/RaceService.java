@@ -30,27 +30,14 @@ public class RaceService {
     private ScheduledExecutorService scheduler;
 
     private List<Driver> drivers;
-
-    public boolean restartRace(){
-        if(raceStatus == RaceStatus.FINISHED){
-            raceStatus = RaceStatus.WAITING;
-            sessionTime = 0;
-            drivers = null;
-            if(initializeRace()){
-                startRace();
-            }
-            return true;
-        }else{
-            return false;
-        }
-    }
+    private List<Driver> grid;
 
     public boolean initializeRace() {
         if (raceStatus == RaceStatus.WAITING) {
             if (fetchData()) {
                 applySettings();
                 raceStatus = RaceStatus.READY;
-                Collections.shuffle(drivers);
+                setRandomGrid();
                 return true;
             } else {
                 raceStatus = RaceStatus.FAILED;
@@ -93,6 +80,20 @@ public class RaceService {
                     printService.printColoredMessage("The race is already initialized and await start", MessageColor.YELLOW);
                     break;
             }
+        }
+    }
+
+    public boolean restartRace(){
+        if(raceStatus == RaceStatus.FINISHED){
+            raceStatus = RaceStatus.WAITING;
+            sessionTime = 0;
+            drivers = null;
+            if(initializeRace()){
+                startRace();
+            }
+            return true;
+        }else{
+            return false;
         }
     }
 
@@ -152,16 +153,9 @@ public class RaceService {
         }
     }
 
-    private boolean fetchData(){
-        try{
-            drivers = settingsService.getDriverList();
-
-            System.out.println("Successfully fetched Data");
-            return true;
-        }catch (Exception e){
-            printService.printColoredMessage("There was a problem fetching data", MessageColor.RED);
-            return false;
-        }
+    private void setRandomGrid(){
+        Collections.shuffle(drivers);
+        grid = drivers;
     }
 
     //TODO apply settings set by user for the race
@@ -174,10 +168,26 @@ public class RaceService {
         });
     }
 
+    private boolean fetchData(){
+        try{
+            drivers = settingsService.getDriverList();
+            System.out.println("Successfully fetched Data");
+            return true;
+        }catch (Exception e){
+            printService.printColoredMessage("There was a problem fetching data", MessageColor.RED);
+            return false;
+        }
+    }
+
     public List<Driver> getDrivers() {
         return sortPositions(new ArrayList<>(drivers));
     }
+
     public RaceStatus getRaceStatus() {
         return raceStatus;
+    }
+
+    public List<Driver> getGrid() {
+        return grid;
     }
 }

@@ -21,6 +21,7 @@ public class RaceRestController {
     public void startRace(){
         raceService.startRace();
     }
+
     @PostMapping("/restartRace")
     public void restartRace(){
         raceService.restartRace();
@@ -30,6 +31,11 @@ public class RaceRestController {
     public List<Driver> getDriverPositions(){
         System.out.println("Requested Drivers Data");
         return raceService.getDrivers();
+    }
+    @GetMapping("/getInitialGrid")
+    public List<Driver> getInitialGrid(){
+        System.out.println("Requested Initial Grid Data Data");
+        return raceService.getGrid();
     }
 
     @GetMapping("/getRaceStatus")
