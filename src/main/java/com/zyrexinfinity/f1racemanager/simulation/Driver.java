@@ -1,11 +1,9 @@
 package com.zyrexinfinity.f1racemanager.simulation;
 
 import com.zyrexinfinity.f1racemanager.enums.DriverStatus;
-import com.zyrexinfinity.f1racemanager.enums.Track;
 import com.zyrexinfinity.f1racemanager.model.DriverEntity;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Driver {
     private final String fullName;
@@ -25,8 +23,8 @@ public class Driver {
         this.fullName = driverBluePrint.getFullName();
         this.nationality = driverBluePrint.getNationality();
 
-        this.driverAwareness = Math.round((double) (100-driverBluePrint.getDriverAwareness())/50.0 * 1000.0) / 1000.0;
-        this.driverPace = Math.round(((double) driverBluePrint.getDriverPace() - 60) / (100 - 60) * 1000.0) / 1000.0;
+        this.driverAwareness = driverBluePrint.getDriverAwareness();
+        this.driverPace = driverBluePrint.getDriverPace();
 
         this.bolid = new Bolid(driverBluePrint.getTeam().getBolid());
         this.team = new Team(driverBluePrint.getTeam());
@@ -34,57 +32,6 @@ public class Driver {
         this.currentLap = 0;
         this.raceTime = 0;
     }
-
-    public long projectLapTime(Track track){
-        long lapTime = 0;
-        for (byte i = 1; i <= 3; i++) {
-            lapTime += projectSectorTime(track, i);
-        }
-        raceTime += lapTime;
-        currentLap++;
-        return lapTime;
-    }
-
-    public long projectSectorTime(Track track, byte sectorNumber) {
-        long bestSectorTime = track.getSectorTime(sectorNumber) - 1_000;
-        long worstSectorTime = track.getSectorTime(sectorNumber) + 1_000;
-
-        double aeroFactor = 1.0 - bolid.getAerodynamicRating();
-        //60% Driver, 40% Car
-        double performanceFactor = (driverPace * 0.6) + (aeroFactor * 0.4);
-
-        double driverAverageSectorTime = worstSectorTime - (worstSectorTime - bestSectorTime) * performanceFactor;
-
-        double minDeviation = 0.005;  // 0.5%
-        double maxDeviation = 0.03;   // 3%
-        double relativeDeviation = maxDeviation - (maxDeviation - minDeviation) * performanceFactor;
-
-        double randomFactor = 1.0 + (ThreadLocalRandom.current().nextDouble() * 2 - 1) * relativeDeviation;
-
-        long sectorTime = Math.round(driverAverageSectorTime * randomFactor);
-
-        double unpredictability = 1.0 + ThreadLocalRandom.current().nextDouble(-0.005, 0.007);
-        sectorTime = Math.round(sectorTime * unpredictability);
-
-        return sectorTime;
-    }
-
-    public DriverStatus checkDNF(){
-        if(bolid.checkEngineFailure()){
-            status = DriverStatus.ReliabilityDNF;
-        }else if(checkCrash()){
-            status = DriverStatus.CrashDNF;
-        }
-        return status;
-    }
-
-    private boolean checkCrash() {
-        double baseChance = 0.0005; //0.05%
-        double maxAdded = 0.001; //+0.1% (max: 0.15%)
-        double chance = baseChance + (maxAdded * driverAwareness);
-        return random.nextDouble() < chance;
-    }
-
 
     @Override
     public String toString() {

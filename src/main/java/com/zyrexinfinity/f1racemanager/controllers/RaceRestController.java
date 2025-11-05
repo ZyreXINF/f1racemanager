@@ -24,24 +24,24 @@ public class RaceRestController {
 
     @PostMapping("/restartRace")
     public void restartRace(){
-        raceService.restartRace();
+        raceService.setSession(null);
+        boolean raceInitialized = raceService.initRace();
+        if(raceInitialized){
+            raceService.startRace();
+        }
     }
 
     @GetMapping("/getDriverData")
     public List<Driver> getDriverPositions(){
         System.out.println("Requested Drivers Data");
-        return raceService.getDrivers();
-    }
-    @GetMapping("/getInitialGrid")
-    public List<Driver> getInitialGrid(){
-        System.out.println("Requested Initial Grid Data Data");
-        return raceService.getGrid();
+        return raceService.getSession().getDriversList();
     }
 
     @GetMapping("/getRaceStatus")
     public RaceStatus getRaceStatus(){
         System.out.println("Requested Race Status Data");
-        return raceService.getRaceStatus();
+        System.out.println();
+        return raceService.getSession().getRaceStatus();
     }
 
     @GetMapping("/test")

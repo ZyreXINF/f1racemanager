@@ -1,5 +1,4 @@
 let drivers, oldDriversPositions;
-let grid;
 
 let raceStatus;
 let intervalId;
@@ -8,7 +7,7 @@ $(document).ready(async function () {
     await requestRaceStatus();
 
     switch (raceStatus) {
-        case "STARTED":
+        case "RACING":
             intervalId = setInterval(raceLogic, 1500);
             disableButton();
             break;
@@ -40,9 +39,15 @@ $(document).ready(async function () {
 async function raceLogic(){
     await requestRaceStatus();
     checkRaceStatus();
-    if(raceStatus === "STARTED") {
+    if(raceStatus === "RACING") {
         await requestDriversData();
         updatePositions();
+    }
+}
+function checkRaceStatus(){
+    if(raceStatus === "FINISHED"){
+        clearInterval(intervalId);
+        changeButton();
     }
 }
 
@@ -78,20 +83,12 @@ async function restartRace() {
     });
 }
 
-function checkRaceStatus(){
-    if(raceStatus === "FINISHED"){
-        clearInterval(intervalId);
-        changeButton();
-    }
-}
-
 //UI Updates
 function updatePositions() {
     for(var i = 0; i < drivers.length; i++){
         const driver = drivers[i];
         const newPosition = i;
         const oldPosition = oldDriversPositions.indexOf(driver.fullName);
-        console.log(oldPosition);
         let positionDifference = oldPosition - newPosition;
         updateDriverCard(driver, i, positionDifference);
     }
@@ -111,7 +108,6 @@ function updateDriverCard(driver, index, positionDifference){
             driverCardElements[3].textContent = "+" + formatTime(driver.raceTime - drivers[index-1].raceTime);
         }
     }
-    console.log(driver.fullName + " | " + positionDifference);
     if(positionDifference > 0){
         flashCard(driverCardElements[0], "up");
     }else if(positionDifference < 0){
@@ -154,7 +150,6 @@ async function requestDriversData() {
                 } else {
                     oldDriversPositions = drivers.map(d => d.fullName);
                 }
-                console.log(oldDriversPositions);
                 drivers = driversJSON;
                 resolve();
             },

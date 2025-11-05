@@ -2,11 +2,7 @@ package com.zyrexinfinity.f1racemanager.simulation;
 
 import com.zyrexinfinity.f1racemanager.model.BolidEntity;
 
-import java.util.Random;
-
 public class Bolid {
-    private static final Random random = new Random();
-
     private String bolidModel;
 
     private double aerodynamicRating;
@@ -14,15 +10,8 @@ public class Bolid {
 
     public Bolid(BolidEntity bolidBlueprint) {
         this.bolidModel = bolidBlueprint.getBolidModel();
-        this.aerodynamicRating = Math.round(((100 - bolidBlueprint.getReliability()) / 60.0) * 1000.0) / 1000.0;
-        this.reliability = Math.round(((100 - bolidBlueprint.getReliability()) / 60.0) * 1000.0) / 1000.0;
-    }
-
-    public boolean checkEngineFailure(){
-        double baseChance = 0.001;   // 0.1%
-        double maxAdded = 0.001;     // +0.2%
-        double chance = baseChance + (maxAdded * reliability);
-        return random.nextDouble() < chance;
+        this.aerodynamicRating = bolidBlueprint.getAerodynamicRating();
+        this.reliability = bolidBlueprint.getReliability();
     }
 
     @Override
@@ -47,7 +36,7 @@ public class Bolid {
     }
 
     public void setReliability(double reliability) {
-        this.reliability = Math.round(((100 - reliability) / 60.0) * 1000.0) / 1000.0;
+        this.reliability = reliability;
     }
 
     public double getAerodynamicRating() {
@@ -55,6 +44,6 @@ public class Bolid {
     }
 
     public void setAerodynamicRating(double aerodynamicRating) {
-        this.aerodynamicRating = Math.round(((100 - aerodynamicRating) / 50.0) * 1000.0) / 1000.0;
+        this.aerodynamicRating = aerodynamicRating;
     }
 }

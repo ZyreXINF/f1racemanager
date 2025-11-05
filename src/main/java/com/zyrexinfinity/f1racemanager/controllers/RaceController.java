@@ -1,6 +1,5 @@
 package com.zyrexinfinity.f1racemanager.controllers;
 
-import com.zyrexinfinity.f1racemanager.enums.RaceStatus;
 import com.zyrexinfinity.f1racemanager.services.RaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,11 +15,9 @@ public class RaceController {
 
     @RequestMapping("/race")
     public String race(Model model){
-        if(raceService.getRaceStatus() == RaceStatus.WAITING){
-            raceInitialized = raceService.initializeRace();
-        }
+        raceInitialized = raceService.initRace();
         if(raceInitialized){
-            model.addAttribute("drivers", raceService.getDrivers());
+            model.addAttribute("drivers", raceService.getSession().getDriversList());
         }
         return "race.html";
     }
