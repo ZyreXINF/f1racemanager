@@ -16,9 +16,7 @@ public class RaceController {
     @RequestMapping("/race")
     public String race(Model model){
         raceInitialized = raceService.initRace();
-        if(raceInitialized){
-            model.addAttribute("drivers", raceService.getSession().getDriversList());
-        }
+        model.addAttribute("drivers", raceService.getSession().getDriversList());
         return "race.html";
     }
 }

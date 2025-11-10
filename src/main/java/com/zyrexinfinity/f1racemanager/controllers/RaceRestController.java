@@ -37,10 +37,15 @@ public class RaceRestController {
         return raceService.getSession().getDriversList();
     }
 
+    @GetMapping("/getFastestDriver")
+    public Driver getFastestLapTimeDriver(){
+        System.out.println("Requested Fastest driver");
+        return raceService.getSession().getFastestDriver();
+    }
+
     @GetMapping("/getRaceStatus")
     public RaceStatus getRaceStatus(){
         System.out.println("Requested Race Status Data");
-        System.out.println();
         return raceService.getSession().getRaceStatus();
     }
 

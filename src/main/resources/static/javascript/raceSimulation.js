@@ -1,4 +1,5 @@
 let drivers, oldDriversPositions;
+let fastestDriver;
 
 let raceStatus;
 let intervalId;
@@ -13,7 +14,9 @@ $(document).ready(async function () {
             break;
         case "FINISHED":
             await requestDriversData();
+            await requestFastestDriver();
             updatePositions();
+            updateLapCounter();
             changeButton();
             break;
     }
@@ -28,7 +31,11 @@ $(document).ready(async function () {
             case "FINISHED":
                 await restartRace();
                 await requestDriversData();
+                console.log(drivers);
+                clearDNFEffect();
+                clearFastestLapEffect();
                 updatePositions();
+                updateLapCounter();
                 disableButton();
                 intervalId = setInterval(raceLogic, 1500);
                 break;
@@ -41,6 +48,8 @@ async function raceLogic(){
     checkRaceStatus();
     if(raceStatus === "RACING") {
         await requestDriversData();
+        await requestFastestDriver();
+        updateLapCounter();
         updatePositions();
     }
 }
@@ -93,6 +102,16 @@ function updatePositions() {
         updateDriverCard(driver, i, positionDifference);
     }
 }
+function updateLapCounter(){
+    let lapElement = document.getElementById(`lapCounter`);
+    if(raceStatus === "RACING"){
+        let lapNumber = drivers[0].currentLap;
+        lapElement.textContent = "Lap: " + lapNumber;
+    }else if(raceStatus === "FINISHED"){
+        lapElement.textContent = "Race Finished";
+    }
+
+}
 function updateDriverCard(driver, index, positionDifference){
     let driverCard = document.getElementById(`Driver${index}`);
     let driverCardElements = driverCard.getElementsByTagName("div");
@@ -100,9 +119,15 @@ function updateDriverCard(driver, index, positionDifference){
     driverCardElements[0].setAttribute("id", driver.team.teamName);
     //Driver Name
     driverCardElements[2].textContent = driver.fullName;
+    if(driver.fullName === fastestDriver.fullName){
+        clearFastestLapEffect();
+        driverCardElements[0].classList.add("fastest");
+    }
     //Gap/Status
     if(driver.status === "ReliabilityDNF" || driver.status === "CrashDNF"){
         driverCardElements[3].textContent = "DNF";
+        driverCardElements[3].textContent = "DNF";
+        driverCardElements[0].classList.add("dnf");
     }else{
         if(index !== 0){
             driverCardElements[3].textContent = "+" + formatTime(driver.raceTime - drivers[index-1].raceTime);
@@ -115,14 +140,27 @@ function updateDriverCard(driver, index, positionDifference){
     }
 }
 function formatTime(time) {
-    // Convert to seconds
     return (time / 1000).toFixed(3);
 }
 function flashCard(card, direction) {
     const flashClass = direction === "up" ? "flash-up" : "flash-down";
-    card.classList.remove("flash-up", "flash-down"); // reset any ongoing flash
-    void card.offsetWidth; // force reflow to restart animation
+    card.classList.remove("flash-up", "flash-down");
+    void card.offsetWidth;
     card.classList.add(flashClass);
+}
+function clearDNFEffect(){
+    for(var i = 0; i < drivers.length; i++){
+        let driverCard = document.getElementById(`Driver${i}`);
+        let driverCardElements = driverCard.getElementsByTagName("div");
+        driverCardElements[0].classList.remove("dnf");
+    }
+}
+function clearFastestLapEffect(){
+    for(var i = 0; i < drivers.length; i++){
+        let driverCard = document.getElementById(`Driver${i}`);
+        let driverCardElements = driverCard.getElementsByTagName("div");
+        driverCardElements[0].classList.remove("fastest");
+    }
 }
 
 //Button updates
@@ -168,6 +206,24 @@ async function requestRaceStatus() {
             dataType: "json",
             success: function (raceStatusJSON) {
                 raceStatus = raceStatusJSON;
+                resolve();
+            },
+            error: function (error) {
+                console.error("Error occurred:", error);
+                reject(error);
+            },
+        });
+    });
+}
+async function requestFastestDriver(){
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            url: "/getFastestDriver",
+            dataType: "json",
+            success: function (fastestDriverJSON) {
+                fastestDriver = fastestDriverJSON;
+                console.log(fastestDriver);
                 resolve();
             },
             error: function (error) {

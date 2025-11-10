@@ -1,4 +1,3 @@
-/* === General page styling === */
 body {
     margin: 0;
     padding: 0;
@@ -14,7 +13,7 @@ body {
     height: 100%;
     background: radial-gradient(circle at top, #ffffff, #c4c4c4);
     z-index: -1;
-    opacity: 1; /* Keep it fully visible */
+    opacity: 1;
 }
 
 .container {
@@ -45,10 +44,10 @@ body {
 
 .column {
     display: flex;
-    flex-direction: column; /* stack driver cards vertically */
+    flex-direction: column;
     gap: 0.6rem;
-    width: 400px;           /* wider columns */
-    max-width: 45%;         /* optional: prevent too wide on large screens */
+    width: 400px;
+    max-width: 45%;
 }
 
 ul, ol {
@@ -111,8 +110,7 @@ ul, ol {
     cursor: pointer;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 2rem;
-    border: 2px solid;
-    border-color:#c43939;
+    border: 2px solid #c43939;
 }
 
 button:not(:disabled):hover{
@@ -132,6 +130,7 @@ button:disabled:hover{
     animation: shake 0.4s infinite;
     cursor: not-allowed;
 }
+
 @keyframes shake {
     0% { transform: rotate(0deg); }
     25% { transform: rotate(1deg); }
@@ -140,7 +139,7 @@ button:disabled:hover{
     100% { transform: rotate(0deg); }
 }
 
-/* === Team colors === */
+/* Team colors */
 #Ferrari::before       { background-color: #DC0000; }
 #RedBull::before       { background-color: #1E41FF; }
 #Mercedes::before      { background-color: #00D2BE; }
@@ -189,7 +188,6 @@ button:disabled:hover{
     90%  { opacity: 0.1; background-color: var(--flash-green); }
     100% { opacity: 0; background-color: var(--flash-transparent); }
 }
-
 @keyframes flashRed {
     0%   { opacity: 0; background-color: var(--flash-transparent); }
     10%  { opacity: 0.1; background-color: var(--flash-red); }
@@ -210,4 +208,17 @@ button:disabled:hover{
 
 .driver-card.flash-down::after {
     animation: flashRed 0.75s ease-in-out;
+}
+
+.driver-card.fastest{
+    border: 2px solid #ff7cff;
+}
+
+.driver-card.dnf {
+    opacity: 0.5;
+    filter: grayscale(75%);
+    transition: opacity 0.4s, filter 0.4s;
+}
+.driver-card.dnf::after {
+    background: rgba(255, 255, 255, 0.6);
 }

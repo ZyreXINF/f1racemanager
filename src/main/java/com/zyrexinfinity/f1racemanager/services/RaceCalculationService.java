@@ -13,7 +13,7 @@ public class RaceCalculationService {
     public long calculateLapTime(CalculationContext calculationContext){
         long lapTime = 0L;
         for(int i = 1; i <= 3; i++){
-            lapTime += calculateSectorTime(i, calculationContext);
+            lapTime += calculateSectorTime(i,ThreadLocalRandom.current().nextDouble(-1.0, 1.0), calculationContext);
         }
         return lapTime;
     }
@@ -50,7 +50,7 @@ public class RaceCalculationService {
     }
 
     //TODO Increase max deviation
-    private long calculateSectorTime(int sectorNumber, CalculationContext calculationContext){
+    private long calculateSectorTime(int sectorNumber, double lapPaceRandomMultiplier, CalculationContext calculationContext){
         RaceSettings settings = calculationContext.getSettings();
         Driver driver = calculationContext.getDriver();
 
@@ -59,7 +59,7 @@ public class RaceCalculationService {
         double maxDriverPaceDeviation = settings.getMaxDriverPaceDeviation();
         // DriverPace + Random * MaxRandomDeviation
         double modifiedDriverPace = clamp(driverPace +
-                (ThreadLocalRandom.current().nextDouble(-1.0, 1.0) *
+                (lapPaceRandomMultiplier *
                         maxDriverPaceDeviation),
                 0,1);
 

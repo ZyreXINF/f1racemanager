@@ -6,8 +6,8 @@ import com.zyrexinfinity.f1racemanager.model.DriverEntity;
 import java.util.Random;
 
 public class Driver {
-    private final String fullName;
-    private final String nationality;
+    private String fullName;
+    private String nationality;
     private double driverAwareness;
     private double driverPace;
 
@@ -17,6 +17,7 @@ public class Driver {
 
     private long raceTime;
     private int currentLap;
+    private long fastestLap;
     private DriverStatus status = DriverStatus.DNS;
 
     public Driver(DriverEntity driverBluePrint) {
@@ -31,6 +32,22 @@ public class Driver {
 
         this.currentLap = 0;
         this.raceTime = 0;
+        this.fastestLap = 0;
+    }
+    public Driver(){}
+
+    public Driver clone(){
+        Driver cloned = new Driver();
+        cloned.setFullName(this.fullName);
+        cloned.setNationality(this.nationality);
+        cloned.setDriverAwareness(this.driverAwareness);
+        cloned.setDriverPace(this.driverPace);
+        cloned.setBolid(this.bolid);
+        cloned.setTeam(this.team);
+        cloned.setCurrentLap(this.getCurrentLap());
+        cloned.setRaceTime(this.getRaceTime());
+        cloned.setFastestLap(this.fastestLap);
+        return cloned;
     }
 
     @Override
@@ -44,6 +61,7 @@ public class Driver {
                 ", raceTime=" + raceTime +
                 ", currentLap=" + currentLap +
                 ", status=" + status +
+                ", fastestLap=" + fastestLap +
                 '}';
     }
 
@@ -51,8 +69,16 @@ public class Driver {
         return fullName;
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getNationality() {
         return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
     }
 
     public double getDriverAwareness() {
@@ -60,7 +86,7 @@ public class Driver {
     }
 
     public void setDriverAwareness(double driverAwareness) {
-        this.driverAwareness = Math.round((100-driverAwareness) /50.0 * 1000.0) / 1000.0;
+        this.driverAwareness = driverAwareness;
     }
 
     public double getDriverPace() {
@@ -68,7 +94,7 @@ public class Driver {
     }
 
     public void setDriverPace(double driverPace) {
-        this.driverPace = Math.round((driverPace - 60) / (100 - 60) * 1000.0) / 1000.0;
+        this.driverPace = driverPace;
     }
 
     public Bolid getBolid() {
@@ -103,6 +129,14 @@ public class Driver {
         this.currentLap = currentLap;
     }
 
+    public long getFastestLap() {
+        return fastestLap;
+    }
+
+    public void setFastestLap(long fastestLap) {
+        this.fastestLap = fastestLap;
+    }
+
     public DriverStatus getStatus() {
         return status;
     }
@@ -110,5 +144,4 @@ public class Driver {
     public void setStatus(DriverStatus status) {
         this.status = status;
     }
-
 }

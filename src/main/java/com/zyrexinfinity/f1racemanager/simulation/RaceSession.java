@@ -19,19 +19,25 @@ public class RaceSession {
     private RaceStatus raceStatus;
     private RaceSettings settings;
     private CalculationContext calculationContext;
+
+    private Driver fastestDriver;
+
     private int currentLap;
+    private long fastestLapTime;
 
     public RaceSession(RaceSettings settings, List<Driver> grid,
                        RaceCalculationService calc,
                        GridService gridService,
                        PrintService printService) {
         this.settings = settings;
-        calculationContext = new CalculationContext(settings);
+        this.calculationContext = new CalculationContext(settings);
         this.driversList = grid;
         this.calculationService = calc;
         this.gridService = gridService;
         this.printService = printService;
-        currentLap = grid.get(0).getCurrentLap();
+        this.currentLap = grid.get(0).getCurrentLap();
+        this.fastestLapTime = 0;
+        this.fastestDriver = null;
     }
 
     public boolean update(){
@@ -46,6 +52,20 @@ public class RaceSession {
                     if(status == DriverStatus.RACING){
                         //Calculation of lap time
                         long calculatedLapTime = calculationService.calculateLapTime(calculationContext);
+                        long driversFastestLap = driver.getFastestLap();
+
+                        //Personal Best Laptime
+                        if (driversFastestLap <= 0 || calculatedLapTime < driversFastestLap) {
+                            driver.setFastestLap(calculatedLapTime);
+                        }
+
+                        //Overall Best Laptime
+                        if (fastestLapTime <= 0 || calculatedLapTime < fastestLapTime) {
+                            fastestLapTime = calculatedLapTime;
+                            fastestDriver = null;
+                            fastestDriver = driver.clone();
+                        }
+
                         driver.setRaceTime(driver.getRaceTime() + calculatedLapTime);
                         driver.setCurrentLap(driver.getCurrentLap()+1);
                     }else{
@@ -99,7 +119,7 @@ public class RaceSession {
         return driversList;
     }
 
-    public void setDriversList(List<Driver> driversList) {
-        this.driversList = driversList;
+    public Driver getFastestDriver() {
+        return fastestDriver;
     }
 }
