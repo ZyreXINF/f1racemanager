@@ -12,10 +12,62 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RaceCalculationService {
     public long calculateLapTime(CalculationContext calculationContext){
         long lapTime = 0L;
+        double lapPaceRandomMultiplier = normilize(ThreadLocalRandom.current().nextDouble(-1.0, 1.0));
         for(int i = 1; i <= 3; i++){
-            lapTime += calculateSectorTime(i,ThreadLocalRandom.current().nextDouble(-1.0, 1.0), calculationContext);
+            lapTime += calculateSectorTime(i, lapPaceRandomMultiplier, calculationContext);
         }
         return lapTime;
+    }
+
+    private long calculateSectorTime(int sectorNumber, double lapPaceRandomMultiplier, CalculationContext calculationContext){
+        RaceSettings settings = calculationContext.getSettings();
+        Driver driver = calculationContext.getDriver();
+
+        double driverPace = normilize((driver.getDriverPace()/100) *
+                settings.getDriverPaceModifier());
+        double maxDriverPaceDeviation = settings.getMaxDriverPaceDeviation();
+        // DriverPace + Random * MaxRandomDeviation
+        double modifiedDriverPace = normilize(clamp(driverPace +
+                        (lapPaceRandomMultiplier *
+                                maxDriverPaceDeviation),
+                0,1));
+
+        double driverPerformanceRatio = settings.getDriverPerformanceRatio();
+        double carPerformanceRatio = settings.getCarPerformanceRatio();
+        double bolidAerodynamicRating = normilize((driver.getBolid().getAerodynamicRating()/100) *
+                settings.getAerodynamicRatingModifier());
+        // driverPerformanceRatio * (1-modifiedDriverPace) + carPerformanceRatio * (1 - aerodynamicRating)
+        double score = normilize(driverPerformanceRatio * (1 - modifiedDriverPace) +
+                carPerformanceRatio * (1 - bolidAerodynamicRating));
+
+        double maxTimeDeviation = settings.getMaxTimeDeviation();
+        //score * maxTimeDeviation
+        double delta = normilize(clamp(score * maxTimeDeviation, 0, maxTimeDeviation));
+
+        long baseSectorTime = settings.getTrack().getSectorTime(sectorNumber);
+        //baseTime * (1 + delta)
+        double projectedSectorTime = normilize(baseSectorTime * (1 + delta));
+        projectedSectorTime = Math.max(projectedSectorTime, baseSectorTime);
+
+        System.out.println(driver.getFullName() + " | Base Pace: " + driverPace +
+                " | lapPaceRandomMultiplier: " + lapPaceRandomMultiplier +
+                " | ModifiedPace: " + modifiedDriverPace +
+                " | Score: " + score +
+                " | Delta: " + delta +
+                 " | SectorTime: " + projectedSectorTime);
+
+        return Math.round(projectedSectorTime);
+    }
+
+    private double clamp(double value, double minRangeBorder, double maxRangeBorder){
+        if(value < minRangeBorder){
+            return minRangeBorder;
+        }else if(value > maxRangeBorder){
+            return maxRangeBorder;
+        }return value;
+    }
+    private double normilize(double value){
+        return (double) Math.round(value * 1000) /1000;
     }
 
     public DriverStatus calculateStatus(CalculationContext calculationContext){
@@ -33,7 +85,7 @@ public class RaceCalculationService {
         double awareness = driver.getDriverAwareness()/100 * settings.getCrashRate();
 
         double baseChance = 0.0005;
-        double maxAdded = 0.0015;
+        double maxAdded = 0.0005;
         double chance = baseChance + (maxAdded * awareness);
         return ThreadLocalRandom.current().nextDouble(0.0, 1.0) <= chance;
     }
@@ -44,50 +96,8 @@ public class RaceCalculationService {
         double reliability = driver.getBolid().getReliability()/100 * settings.getEngineFailureRate();
 
         double baseChance = 0.0005;
-        double maxAdded = 0.0015;
+        double maxAdded = 0.0005;
         double chance = baseChance + (maxAdded * reliability);
         return ThreadLocalRandom.current().nextDouble(0.0, 1.0) <= chance;
-    }
-
-    //TODO Increase max deviation
-    private long calculateSectorTime(int sectorNumber, double lapPaceRandomMultiplier, CalculationContext calculationContext){
-        RaceSettings settings = calculationContext.getSettings();
-        Driver driver = calculationContext.getDriver();
-
-        double driverPace = (driver.getDriverPace()/100) *
-                settings.getDriverPaceModifier();
-        double maxDriverPaceDeviation = settings.getMaxDriverPaceDeviation();
-        // DriverPace + Random * MaxRandomDeviation
-        double modifiedDriverPace = clamp(driverPace +
-                (lapPaceRandomMultiplier *
-                        maxDriverPaceDeviation),
-                0,1);
-
-        double driverPerformanceRatio = settings.getDriverPerformanceRatio();
-        double carPerformanceRatio = settings.getCarPerformanceRatio();
-        double bolidAerodynamicRating = (driver.getBolid().getAerodynamicRating()/100) *
-                settings.getAerodynamicRatingModifier();
-        // driverPerformanceRatio * (1-modifiedDriverPace) + carPerformanceRatio * (1 - aerodynamicRating)
-        double score = driverPerformanceRatio * (1 - modifiedDriverPace) +
-                carPerformanceRatio * (1 - bolidAerodynamicRating);
-
-        double maxTimeDeviation = settings.getMaxTimeDeviation();
-        //score * maxTimeDeviation
-        double delta = clamp(score * maxTimeDeviation, 0, maxTimeDeviation);
-
-        long baseSectorTime = settings.getTrack().getSectorTime(sectorNumber);
-        //baseTime * (1 + delta)
-        double projectedSectorTime = baseSectorTime * (1 + delta);
-        projectedSectorTime = Math.max(projectedSectorTime, baseSectorTime);
-
-        return Math.round(projectedSectorTime);
-    }
-
-    private double clamp(double value, double minRangeBorder, double maxRangeBorder){
-        if(value < minRangeBorder){
-            return minRangeBorder;
-        }else if(value > maxRangeBorder){
-            return maxRangeBorder;
-        }return value;
     }
 }

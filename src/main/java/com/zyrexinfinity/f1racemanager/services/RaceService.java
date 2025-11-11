@@ -1,7 +1,7 @@
 package com.zyrexinfinity.f1racemanager.services;
 
 import com.zyrexinfinity.f1racemanager.enums.*;
-import com.zyrexinfinity.f1racemanager.factory.RaceSessionFactory;
+import com.zyrexinfinity.f1racemanager.factory.SessionFactory;
 import com.zyrexinfinity.f1racemanager.factory.RaceSettingsFactory;
 import com.zyrexinfinity.f1racemanager.simulation.Driver;
 import com.zyrexinfinity.f1racemanager.simulation.RaceSession;
@@ -27,7 +27,7 @@ public class RaceService {
     @Autowired
     private RaceSettingsFactory raceSettingsFactory;
     @Autowired
-    private RaceSessionFactory raceSessionFactory;
+    private SessionFactory raceSessionFactory;
 
     private RaceSession session;
     private ScheduledExecutorService scheduler;
@@ -42,7 +42,7 @@ public class RaceService {
             drivers = gridService.randomizeGrid(drivers);
             drivers = gridService.setStartingPositions(drivers);
 
-            session = raceSessionFactory.create(settings, drivers);
+            session = raceSessionFactory.createRaceSession(settings, drivers);
             session.setRaceStatus(RaceStatus.READY);
             return true;
         }

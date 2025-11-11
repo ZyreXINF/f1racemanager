@@ -1,19 +1,23 @@
 package com.zyrexinfinity.f1racemanager.controllers;
 
-import com.zyrexinfinity.f1racemanager.enums.RaceStatus;
+import com.zyrexinfinity.f1racemanager.factory.SessionFactory;
+import com.zyrexinfinity.f1racemanager.model.SessionData;
 import com.zyrexinfinity.f1racemanager.services.RaceService;
-import com.zyrexinfinity.f1racemanager.simulation.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class RaceRestController {
     @Autowired
     RaceService raceService;
+    @Autowired
+    SessionFactory SessionFactory;
 
     //TODO Secure requests with Spring Security Authentification
 
@@ -31,26 +35,14 @@ public class RaceRestController {
         }
     }
 
-    @GetMapping("/getDriverData")
-    public List<Driver> getDriverPositions(){
-        System.out.println("Requested Drivers Data");
-        return raceService.getSession().getDriversList();
-    }
-
-    @GetMapping("/getFastestDriver")
-    public Driver getFastestLapTimeDriver(){
-        System.out.println("Requested Fastest driver");
-        return raceService.getSession().getFastestDriver();
-    }
-
-    @GetMapping("/getRaceStatus")
-    public RaceStatus getRaceStatus(){
-        System.out.println("Requested Race Status Data");
-        return raceService.getSession().getRaceStatus();
-    }
-
-    @GetMapping("/test")
-    public boolean testRequest(){
-        return true;
+    @GetMapping("/getSessionData")
+    public SessionData getSessionData() {
+        if (!Objects.isNull(raceService.getSession())) {
+            return SessionFactory.createSessionData(raceService.getSession());
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "No active race session found"
+            );
+        }
     }
 }

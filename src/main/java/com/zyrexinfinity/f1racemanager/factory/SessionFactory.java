@@ -1,7 +1,7 @@
 package com.zyrexinfinity.f1racemanager.factory;
 
+import com.zyrexinfinity.f1racemanager.model.SessionData;
 import com.zyrexinfinity.f1racemanager.services.GridService;
-import com.zyrexinfinity.f1racemanager.services.PrintService;
 import com.zyrexinfinity.f1racemanager.services.RaceCalculationService;
 import com.zyrexinfinity.f1racemanager.simulation.Driver;
 import com.zyrexinfinity.f1racemanager.simulation.RaceSession;
@@ -12,15 +12,17 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class RaceSessionFactory {
+public class SessionFactory {
     @Autowired
     private RaceCalculationService calc;
     @Autowired
     private GridService grid;
-    @Autowired
-    private PrintService print;
 
-    public RaceSession create(RaceSettings settings, List<Driver> drivers) {
-        return new RaceSession(settings, drivers, calc, grid, print);
+    public RaceSession createRaceSession(RaceSettings settings, List<Driver> drivers) {
+        return new RaceSession(settings, drivers, calc, grid);
     }
+    public SessionData createSessionData(RaceSession session){
+        return new SessionData(session);
+    }
+    //create SessionData here
 }

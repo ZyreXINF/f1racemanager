@@ -212,6 +212,7 @@ button:disabled:hover{
 
 .driver-card.fastest{
     border: 2px solid #ff7cff;
+    border-radius: 10px;
 }
 
 .driver-card.dnf {

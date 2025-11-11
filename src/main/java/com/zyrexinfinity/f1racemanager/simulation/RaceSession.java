@@ -3,41 +3,35 @@ package com.zyrexinfinity.f1racemanager.simulation;
 import com.zyrexinfinity.f1racemanager.enums.DriverStatus;
 import com.zyrexinfinity.f1racemanager.enums.RaceStatus;
 import com.zyrexinfinity.f1racemanager.services.GridService;
-import com.zyrexinfinity.f1racemanager.services.PrintService;
 import com.zyrexinfinity.f1racemanager.services.RaceCalculationService;
 
 import java.util.List;
 
 public class RaceSession {
+    //Services
     private RaceCalculationService calculationService;
     private GridService gridService;
 
-    private PrintService printService;
-
-    private List<Driver> driversList;
-
-    private RaceStatus raceStatus;
+    //Settings/Calculation-Related Variables
     private RaceSettings settings;
     private CalculationContext calculationContext;
 
-    private Driver fastestDriver;
-
+    //Simulation-Related Variables
+    private RaceStatus raceStatus;
     private int currentLap;
     private long fastestLapTime;
+    private List<Driver> driversList;
 
     public RaceSession(RaceSettings settings, List<Driver> grid,
                        RaceCalculationService calc,
-                       GridService gridService,
-                       PrintService printService) {
+                       GridService gridService) {
         this.settings = settings;
         this.calculationContext = new CalculationContext(settings);
         this.driversList = grid;
         this.calculationService = calc;
         this.gridService = gridService;
-        this.printService = printService;
         this.currentLap = grid.get(0).getCurrentLap();
         this.fastestLapTime = 0;
-        this.fastestDriver = null;
     }
 
     public boolean update(){
@@ -62,8 +56,8 @@ public class RaceSession {
                         //Overall Best Laptime
                         if (fastestLapTime <= 0 || calculatedLapTime < fastestLapTime) {
                             fastestLapTime = calculatedLapTime;
-                            fastestDriver = null;
-                            fastestDriver = driver.clone();
+                            driversList.forEach(driver1 -> {driver1.setSetFastestLap(false);});
+                            driver.setSetFastestLap(true);
                         }
 
                         driver.setRaceTime(driver.getRaceTime() + calculatedLapTime);
@@ -72,8 +66,6 @@ public class RaceSession {
                         driver.setStatus(status);
                     }
                 }
-                int i = driversList.indexOf(driver)+1;
-                printService.printDriverSessionData(driver,i);
             });
 
             currentLap++;
@@ -97,16 +89,6 @@ public class RaceSession {
         raceStatus = RaceStatus.FINISHED;
     }
 
-    @Override
-    public String toString() {
-        return "RaceSession{" +
-                "driversList=" + driversList +
-                ", raceStatus=" + raceStatus +
-                ", settings=" + settings +
-                ", currentLap=" + currentLap +
-                '}';
-    }
-
     public RaceStatus getRaceStatus() {
         return raceStatus;
     }
@@ -119,7 +101,11 @@ public class RaceSession {
         return driversList;
     }
 
-    public Driver getFastestDriver() {
-        return fastestDriver;
+    public int getCurrentLap() {
+        return currentLap;
+    }
+
+    public RaceSettings getSettings() {
+        return settings;
     }
 }

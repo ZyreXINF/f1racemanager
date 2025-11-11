@@ -19,6 +19,7 @@ public class Driver {
     private int currentLap;
     private long fastestLap;
     private DriverStatus status = DriverStatus.DNS;
+    private boolean setFastestLap;
 
     public Driver(DriverEntity driverBluePrint) {
         this.fullName = driverBluePrint.getFullName();
@@ -33,6 +34,8 @@ public class Driver {
         this.currentLap = 0;
         this.raceTime = 0;
         this.fastestLap = 0;
+
+        this.setFastestLap = false;
     }
     public Driver(){}
 
@@ -143,5 +146,13 @@ public class Driver {
 
     public void setStatus(DriverStatus status) {
         this.status = status;
+    }
+
+    public boolean isSetFastestLap() {
+        return setFastestLap;
+    }
+
+    public void setSetFastestLap(boolean setFastestLap) {
+        this.setFastestLap = setFastestLap;
     }
 }
