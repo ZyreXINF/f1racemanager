@@ -2,39 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>F1 Race Manager</title>
+    <title>F1SIM</title>
     <link rel="stylesheet" type="text/css" href="style/index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="background"></div>
-
-    <div class="container">
-        <h1 class="title"><span class="highlight">F1</span> Race Manager</h1>
-    </div>
-    <div class="container">
-        <div id="menu">
+    <header>
+        <h1 class="title"><span class="highlight">F1</span>SIM</h1>
+    </header>
+    <main>
+        <div class="menu">
             <ul>
                 <li>
-                    <form action="/controls">
-                        <button id="start-button">Start</button>
+                    <form action="/raceSetup">
+                        <button class="menu-button" id="start-button">Start</button>
                     </form>
                 </li>
                 <li>
-                    <form>
-                        <button id="credits-button">Credits</button>
+                    <form action="/about">
+                        <button class="menu-button" id="about-button">About</button>
                     </form>
                 </li>
-                <li>
-                    <form>
-                        <button id="about-button">About</button>
+                <li id="bottom-item">
+                    <form action="/credits">
+                        <button class="menu-button" id="credits-button">Credits</button>
                     </form>
                 </li>
-                <li><p>Made by <span class="highlight">ZyreX-Infinity</span></p></li>
             </ul>
         </div>
-    </div>
+     </div>
+    </main>
+    <footer>
+        <p>Made by <span class="highlight">ZyreX-Infinity</span></p>
+    </footer>
 </body>
 </html>

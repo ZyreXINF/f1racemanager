@@ -11,11 +11,9 @@ public class RaceController {
     @Autowired
     RaceService raceService;
 
-    private boolean raceInitialized = false;
-
     @RequestMapping("/race")
     public String race(Model model){
-        raceInitialized = raceService.initRace();
+        boolean raceInitialized = raceService.initRace();
         model.addAttribute("drivers", raceService.getSession().getDriversList());
         return "race.html";
     }

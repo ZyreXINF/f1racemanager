@@ -13,7 +13,7 @@ public class RaceSettingsFactory {
         this.defaults = defaults;
     }
 
-    public RaceSettings create() {
+    public RaceSettings createDefaultSettings() {
         return new RaceSettings(defaults);
     }
 }

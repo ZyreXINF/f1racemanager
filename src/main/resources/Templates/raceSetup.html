@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>F1SIM</title>
+    <link rel="stylesheet" type="text/css" href="style/raceSetup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="background"></div>
+    <header>
+        <h3 class="title"><span class="highlight">F1</span>SIM</h3>
+    </header>
+    <main>
+        <div class="menu">
+            <div class="grid">
+                <ul class="column">
+                    <li>
+                        <div class="settingSection" id="track-menu">
+                            <img class="child" th:src="${defaults.track.imageURL}" alt="Track Icon">
+                            <p class="child" th:text="${defaults.track}"></p>
+                        </div>
+                    </li>
+                    <li id="left-bottom-item">
+                        <div id="race-conditions-menu"></div>
+                    </li>
+                </ul>
+                <ul class="column">
+                    <li>
+                        <div id="grid-menu"></div>
+                    </li>
+                    <li id="right-bottom-item">
+                        <div id="race-mode-menu"></div>
+                    </li>
+                </ul>
+            </div>
+            <div id="modifiers-menu"></div>
+        </div>
+     </div>
+    </main>
+    <footer>
+        <p>Made by <span class="highlight">ZyreX-Infinity</span></p>
+    </footer>
+</body>
+</html>

@@ -10,8 +10,8 @@ import java.util.List;
 
 @Service
 public class PrintService {
-    @Value("${app.version}")
-    private String appVersion;
+//    @Value("${app.version}")
+//    private String appVersion;
 
     public static final String RESET = "\u001B[0m";
     public static final String RED = MessageColor.RED.getColor();

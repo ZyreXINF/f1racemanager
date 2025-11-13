@@ -25,8 +25,6 @@ public class RaceService {
     @Autowired
     private RaceSettingsService raceSettingsService;
     @Autowired
-    private RaceSettingsFactory raceSettingsFactory;
-    @Autowired
     private SessionFactory raceSessionFactory;
 
     private RaceSession session;
@@ -35,8 +33,12 @@ public class RaceService {
 
     public boolean initRace() {
         if (Objects.isNull(session)) {
-            RaceSettings settings = raceSettingsFactory.create();
-            settings = raceSettingsService.applyModifiers(settings);
+            RaceSettings settings;
+            if(Objects.isNull(raceSettingsService.getSettings())){
+                settings = raceSettingsService.getDefaultSettings();
+            }else{
+                settings = raceSettingsService.getSettings();
+            }
 
             List<Driver> drivers = driverService.fetchDrivers();
             drivers = gridService.randomizeGrid(drivers);
@@ -49,7 +51,7 @@ public class RaceService {
         return false;
     }
 
-    public boolean startRace() {
+    public void startRace() {
         if (!Objects.isNull(session) && session.getRaceStatus() == RaceStatus.READY) {
             session.setRaceStatus(RaceStatus.RACING);
             session.getDriversList().forEach(driver -> {
@@ -61,10 +63,7 @@ public class RaceService {
                     shutdownScheduler();
                 }
             }, 0, 1, TimeUnit.SECONDS);
-
-            return true;
         }
-        return false;
     }
 
     @PreDestroy
