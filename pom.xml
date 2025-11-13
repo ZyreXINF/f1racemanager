@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.zyrexinfinity</groupId>
-	<artifactId>f1racemanager</artifactId>
+	<artifactId>F1SIM</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>f1racemanager</name>
 	<description>F1 Race Manager </description>
